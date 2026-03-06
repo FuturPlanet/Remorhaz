@@ -21,14 +21,11 @@ public class ChainExecutor : Singleton<ChainExecutor>
             Debug.LogWarning("Chain already running.");
             return;
         }
-
         isRunning = true;
         currentStep = 0;
         totalSteps = chain.links.Count;
         string lastResponse = null;
-
         Debug.Log($"[ChainExecutor] Starting chain '{chain.name}' with {totalSteps} steps.");
-
         for (int i = 0; i < chain.links.Count; i++)
         {
             ChainLink link = chain.links[i];
@@ -44,7 +41,7 @@ public class ChainExecutor : Singleton<ChainExecutor>
                 isRunning = false;
                 return;
             }
-            string response = await OpenRouterManager.Instance.Send(json);
+            string response = await OpenRouterManager.i.Send(json);
             if (response == null)
             {
                 string error = $"API call failed at step {currentStep}";
@@ -65,8 +62,8 @@ public class ChainExecutor : Singleton<ChainExecutor>
             ChatManager.Instance.AddMessage(linkMessage);
             OnStepCompleted?.Invoke(currentStep, response);
             Debug.Log($"[ChainExecutor] Step {currentStep} completed.");
+            Debug.Log("LLM-Answer: " + linkMessage.content);
         }
-
         isRunning = false;
         OnChainCompleted?.Invoke(lastResponse);
         Debug.Log($"[ChainExecutor] Chain '{chain.name}' completed.");

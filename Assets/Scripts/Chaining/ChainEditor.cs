@@ -31,7 +31,6 @@ public class ChainEditor : Singleton<ChainEditor>
         {
             id = System.Guid.NewGuid().ToString(),
             priority = chain.links.Count,
-            moduleId = "qwen/qwen2-7b-instruct:free",
             maxTokens = 4096,
             messageDepth = 0,
             chainDepth = 1,

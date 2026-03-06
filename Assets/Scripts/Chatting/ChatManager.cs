@@ -9,20 +9,31 @@ public class ChatManager : Singleton<ChatManager>
     public List<ChatSession> sessions = new List<ChatSession>();
     [SerializeField]
     private TMP_InputField input;
+    [SerializeField]
+    private TMP_InputField sessionName;
     public ChatSession activeSession { get; private set; }
 
     public UnityEvent onLoad;
     public UnityEvent onSave;
-    public UnityEvent<ChatMessage> onMessageAdded;
-    public UnityEvent<ChatMessage> onMessageDeleted;
-
-    private void OnEnable()
+    public UnityEvent onMessageAdded;
+    public UnityEvent onMessageDeleted;
+    public void OnEnable()
     {
         LoadSessions();
+    }
+    private void Update()
+    {
+        if(activeSession != null)
+        {
+            LorePanel.i.Initialize();
+            activeSession.name = sessionName.text;
+            activeSession.chainId = LorePanel.i.GetSelectedChainId();
+        }
     }
     public void SetActiveSession(string sessionId)
     {
         activeSession = sessions.Find(s => s.id == sessionId);
+        sessionName.text = activeSession.name;
     }
     public async void Send()
     {
@@ -52,26 +63,26 @@ public class ChatManager : Singleton<ChatManager>
         }
         await ChainExecutor.Instance.Execute(chain, activeSession.messages);
     }
-    public void CreateNewSession(string chainId)
+    public void CreateNewSession()
     {
         ChatSession newSession = new ChatSession
         {
             id = System.Guid.NewGuid().ToString(),
-            chainId = chainId,
+            name = "New Session",
             messages = new List<ChatMessage>()
         };
         sessions.Add(newSession);
-        activeSession = newSession;
         SaveSessions();
+        SetActiveSession(newSession.id);
+        Debug.Log("Created a new Session.");
     }
-    public void DeleteSession(string sessionId)
+    public void DeleteCurrentSession()
     {
-        ChatSession session = sessions.Find(s => s.id == sessionId);
-        if (session != null)
+        if (activeSession != null)
         {
-            sessions.Remove(session);
-            if (activeSession == session)
-                activeSession = null;
+            ChatView.i.CloseView();
+            sessions.Remove(activeSession);
+            activeSession = null;
             SaveSessions();
         }
     }
@@ -84,7 +95,7 @@ public class ChatManager : Singleton<ChatManager>
         }
         activeSession.messages.Add(message);
         SaveSessions();
-        onMessageAdded?.Invoke(message);
+        onMessageAdded?.Invoke();
     }
     public void DeleteMessage(string timestamp)
     {
@@ -98,7 +109,7 @@ public class ChatManager : Singleton<ChatManager>
         {
             activeSession.messages.Remove(message);
             SaveSessions();
-            onMessageDeleted?.Invoke(message);
+            onMessageDeleted?.Invoke();
         }
     }
     public void DeleteMessageAt(int index)
@@ -108,7 +119,7 @@ public class ChatManager : Singleton<ChatManager>
         ChatMessage message = activeSession.messages[index];
         activeSession.messages.RemoveAt(index);
         SaveSessions();
-        onMessageDeleted?.Invoke(message);
+        onMessageDeleted?.Invoke();
     }
     public void SaveSessions()
     {
@@ -122,5 +133,9 @@ public class ChatManager : Singleton<ChatManager>
             sessions = ES3.Load<List<ChatSession>>("chatSessions");
         }
         onLoad?.Invoke();
+    }
+    public ChatSession GetSessionById(string id)
+    {
+        return sessions.Find(c => c.id == id);
     }
 }

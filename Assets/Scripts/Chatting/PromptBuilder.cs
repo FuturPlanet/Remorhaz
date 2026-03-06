@@ -54,17 +54,18 @@ public class PromptBuilder
     {
         string messagesArray = "[";
         messagesArray += $"{{\"role\":\"system\",\"content\":\"{EscapeJson(systemPrompt)}\"}}";
-        if (messages.Count > 0) messagesArray += ",";
-        for (int i = 0; i < messages.Count; i++)
+        foreach (var msg in messages)
         {
-            messagesArray += $"{{\"role\":\"{messages[i].role}\",\"content\":\"{EscapeJson(messages[i].content)}\"}}";
-            if (i < messages.Count - 1) messagesArray += ",";
+            messagesArray += $",{{\"role\":\"{msg.role}\",\"content\":\"{EscapeJson(msg.content)}\"}}";
         }
         messagesArray += "]";
-        baseJson = baseJson.TrimEnd().TrimEnd('}');
-        if (!baseJson.TrimEnd().EndsWith("{")) baseJson += ",";
-        baseJson += $"\"model\":\"{model}\",\"messages\":{messagesArray}}}";
-        return baseJson;
+        baseJson = baseJson.Trim();
+        if (string.IsNullOrEmpty(baseJson) || baseJson == "{}")
+        {
+            return $"{{\"model\":\"{model}\",\"messages\":{messagesArray}}}";
+        }
+        baseJson = baseJson.TrimEnd('}');
+        return $"{baseJson},\"model\":\"{model}\",\"messages\":{messagesArray}}}";
     }
     private static string DictToJson(Dictionary<string, object> dict)
     {
@@ -72,10 +73,15 @@ public class PromptBuilder
         int count = 0;
         foreach (var kvp in dict)
         {
-            if (kvp.Value is string)
-                json += $"\"{kvp.Key}\":\"{kvp.Value}\"";
+            if (kvp.Value is string strVal)
+                json += $"\"{kvp.Key}\":\"{EscapeJson(strVal)}\"";
+            else if (kvp.Value is float f)
+                json += $"\"{kvp.Key}\":{f.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
+            else if (kvp.Value is double d)
+                json += $"\"{kvp.Key}\":{d.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
             else
                 json += $"\"{kvp.Key}\":{kvp.Value.ToString().ToLower()}";
+
             if (++count < dict.Count) json += ",";
         }
         json += "}";

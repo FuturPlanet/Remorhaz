@@ -64,7 +64,7 @@ public class ChainSelection : Singleton<ChainSelection>
                 if (selectedIndex >= 0 && selectedIndex < ModuleEditor.i.modules.Count)
                 {
                     Module selectedModule = ModuleEditor.i.modules[selectedIndex];
-                    link.moduleEditorId = selectedModule.id;
+                    link.moduleId = selectedModule.id;
                 }
             }
             index++;
@@ -170,7 +170,7 @@ public class ChainSelection : Singleton<ChainSelection>
                 Module module = ModuleEditor.i.modules[i];
                 options.Add(new TMP_Dropdown.OptionData(module.name));
 
-                if (module.id == link.moduleEditorId)
+                if (module.id == link.moduleId)
                 {
                     selectedIndex = i;
                 }
