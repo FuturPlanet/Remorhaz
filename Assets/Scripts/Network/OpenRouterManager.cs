@@ -7,7 +7,7 @@ public class OpenRouterManager : Singleton<OpenRouterManager>
 {
     private static readonly HttpClient httpClient = new HttpClient();
     private string apiUrl = "https://openrouter.ai/api/v1/chat/completions";
-    private string apiKey = "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";
+    private string apiKey = "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";
 
     public async Task<string> Send(string jsonBody)
     {

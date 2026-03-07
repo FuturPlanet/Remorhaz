@@ -7,16 +7,19 @@ public class SessionSelection : Singleton<SessionSelection>
     private GameObject unitPrefab;
     [SerializeField]
     private Transform group;
-
     private void OnEnable()
     {
         ChatManager.i.onLoad.AddListener(LoadUnits);
-        ChatManager.i.OnEnable();
         InvokeRepeating(nameof(LoadUnits), 2f, 2f);
+    }
+    private void OnDisable()
+    {
+        ChatManager.i.onLoad.RemoveListener(LoadUnits);
     }
     public void LoadUnits()
     {
-        var sessions = ChatManager.i.sessions;
+        var sessions = ChatManager.i.GetSessionsFromCurrentCollection();
+        if(sessions == null) { return; }
         Transform createNewButton = null;
         foreach (Transform child in group)
         {
@@ -32,19 +35,22 @@ public class SessionSelection : Singleton<SessionSelection>
         foreach (ChatSession session in sessions)
         {
             var sessionObj = Instantiate(unitPrefab, group);
-            sessionObj.name = session.name;
+            sessionObj.name = string.IsNullOrEmpty(session.name) ? "New Session" : session.name;
             var button = sessionObj.transform.Find("Button").GetComponent<Button>();
             sessionObj.transform.Find("Button/Text (TMP)").GetComponent<TMP_Text>().text = session.name;
-            string sessionId = session.id;
-            button.onClick.AddListener(() => OpenSession(sessionId));
+            button.onClick.AddListener(() => OpenSession(session.id));
         }
         createNewButton.SetAsLastSibling();
     }
     public void OpenSession(string id)
     {
         ChatSession session = ChatManager.i.GetSessionById(id);
-        if (session == null) { return; }
+        if (session == null)
+        {
+            Debug.LogWarning($"Corrupted Session ID: {id}");
+            return;
+        }
         ChatManager.i.SetActiveSession(id);
-        ChatView.i.OpenView();
+        ChatView.i.OpenChatHistory();
     }
 }

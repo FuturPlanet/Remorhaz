@@ -33,10 +33,10 @@ RectTransform:
   - {fileID: 8828745708876775143}
   m_Father: {fileID: 5888661291532912336}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 112.5, y: 0}
+  m_SizeDelta: {x: 225, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3896859463400446854
 MonoBehaviour:
@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 6196684646238330874}
   - component: {fileID: 2367250779394111431}
   - component: {fileID: 7580014593976792135}
+  - component: {fileID: 3273522092716842656}
   m_Layer: 5
   m_Name: ScrollUnit
   m_TagString: Untagged
@@ -171,6 +172,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2474d6c87108d454f9dce37a1538339d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InfoHolder
+--- !u!114 &3273522092716842656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888258702346352424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fb17decfc0cbd24f9fff64018f9dff6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyPallate
+  pallateName: Alpha Only
+  isGlobal: 0
+  color1: []
+  color2: []
+  color3:
+  - {fileID: 2367250779394111431}
+  color4: []
+  color5: []
+  onColorUpdate:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1786567664801558010
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,7 +229,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -7.500122, y: 0}
+  m_AnchoredPosition: {x: 25, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4763822828875372507
@@ -257,6 +281,7 @@ GameObject:
   - component: {fileID: 8828745708876775143}
   - component: {fileID: 5767394594659581970}
   - component: {fileID: 7239053954779442904}
+  - component: {fileID: 815235203726061127}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -280,8 +305,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 10.1811, y: 0}
-  m_SizeDelta: {x: 204.3178, y: 50}
+  m_AnchoredPosition: {x: 25, y: 0}
+  m_SizeDelta: {x: 170, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5767394594659581970
 CanvasRenderer:
@@ -383,3 +408,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &815235203726061127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9021861621983820458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 4
+  directGlobal: 1
+  components:
+  - {fileID: 7239053954779442904}

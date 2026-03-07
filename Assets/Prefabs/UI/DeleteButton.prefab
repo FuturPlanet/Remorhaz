@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 388573593611389273}
   - component: {fileID: 4634561468011469823}
   - component: {fileID: 47079114467067000}
+  - component: {fileID: 1997812611569399816}
   m_Layer: 5
   m_Name: DeleteButton
   m_TagString: Untagged
@@ -59,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.34117648, b: 0.13333334, a: 1}
+  m_Color: {r: 0.8627451, g: 0.14901961, b: 0.14901961, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -118,5 +119,28 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 4634561468011469823}
   m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1997812611569399816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4821172027845030026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fb17decfc0cbd24f9fff64018f9dff6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyPallate
+  pallateName: Danger
+  isGlobal: 0
+  color1: []
+  color2: []
+  color3: []
+  color4: []
+  color5:
+  - {fileID: 4634561468011469823}
+  onColorUpdate:
     m_PersistentCalls:
       m_Calls: []

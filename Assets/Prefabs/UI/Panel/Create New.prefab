@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 6076455793030814943}
   - component: {fileID: 4445402696247365387}
   - component: {fileID: 6501364282620297826}
+  - component: {fileID: 2782734824712067460}
   m_Layer: 5
   m_Name: Create New
   m_TagString: Unit
@@ -140,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10980392, g: 0.19215687, b: 0.26666668, a: 1}
+  m_Color: {r: 0.039215688, g: 0.039215688, b: 0.039215688, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -157,6 +158,29 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2782734824712067460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5535953679661312150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fb17decfc0cbd24f9fff64018f9dff6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyPallate
+  pallateName: Hazard Zone
+  isGlobal: 0
+  color1:
+  - {fileID: 6501364282620297826}
+  color2: []
+  color3: []
+  color4: []
+  color5: []
+  onColorUpdate:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8217672399295858121
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,6 +192,7 @@ GameObject:
   - component: {fileID: 6453871778207102161}
   - component: {fileID: 549069668859609923}
   - component: {fileID: 3931445780298621543}
+  - component: {fileID: 8976899880972889256}
   m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
@@ -215,7 +240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.34117648, b: 0.13333334, a: 1}
+  m_Color: {r: 1, g: 0.93333334, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -232,3 +257,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8976899880972889256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8217672399295858121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 5
+  directGlobal: 0
+  components:
+  - {fileID: 3931445780298621543}

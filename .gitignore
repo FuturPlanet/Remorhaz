@@ -6,8 +6,6 @@
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 *.log
@@ -57,13 +55,6 @@ ExportedObj/
 # Unity3D generated file on crash reports
 sysinfo.txt
 
-# Builds
-*.apk
-*.aab
-*.unitypackage
-*.unitypackage.meta
-*.app
-
 # Crashlytics generated file
 crashlytics-build.properties
 
@@ -75,10 +66,38 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Plugins
-/[Aa]ssets/[Pp]lugins/
-
-# Packages
-/[Pp]ackages/
+/[Aa]ssets/AstarPathfindingProject*/
+/[Aa]ssets/[Pp]lugins/AstarPathfindingProject*/
+/[Aa]ssets/CW/
+/[Aa]ssets/[Pp]lugins/CW/
+/[Aa]ssets/Easy Save 3*/
+/[Aa]ssets/[Pp]lugins/EasySave*/
+/[Aa]ssets/[Pp]lugins/Easy Save 3*/
+/[Aa]ssets/EffectCore/
+/[Aa]ssets/[Pp]lugins/EffectCore/
+/[Aa]ssets/QFSW*/
+/[Aa]ssets/[Pp]lugins/QFSW*/
+/[Aa]ssets/NaughtyAttributes/
+/[Aa]ssets/[Pp]lugins/NaughtyAttributes/
+/[Aa]ssets/TextMesh Pro/
+/[Aa]ssets/[Pp]lugins/TextMesh Pro/
+/[Aa]ssets/UltimateSpaceshipsCreator/
+/[Aa]ssets/[Pp]lugins/UltimateSpaceshipsCreator/
 
 # Textures
 /[Aa]ssets/[Tt]extures/
+
+# Builds
+*.apk
+*.aab
+*.unitypackage
+*.unitypackage.meta
+*.app
+*.zip
+*.rar
+/[Nn]ative[Bb]uild/
+/[Bb]uild/
+/[Bb]uilds/
+
+# Project Specific
+/[Aa]ssets/[Aa]udio/

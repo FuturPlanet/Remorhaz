@@ -53,12 +53,18 @@ public class PromptBuilder
     private static string MergeJson(string baseJson, string model, string systemPrompt, List<ChatMessage> messages)
     {
         string messagesArray = "[";
-        messagesArray += $"{{\"role\":\"system\",\"content\":\"{EscapeJson(systemPrompt)}\"}}";
+        bool first = true;
         foreach (var msg in messages)
         {
-            messagesArray += $",{{\"role\":\"{msg.role}\",\"content\":\"{EscapeJson(msg.content)}\"}}";
+            if (!first) messagesArray += ",";
+            messagesArray += $"{{\"role\":\"{msg.role}\",\"content\":\"{EscapeJson(msg.content)}\"}}";
+            first = false;
         }
+        if (!first) messagesArray += ",";
+        messagesArray += $"{{\"role\":\"system\",\"content\":\"{EscapeJson(systemPrompt)}\"}}";
+
         messagesArray += "]";
+
         baseJson = baseJson.Trim();
         if (string.IsNullOrEmpty(baseJson) || baseJson == "{}")
         {

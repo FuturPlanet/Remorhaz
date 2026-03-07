@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 3758294861673994722}
   - component: {fileID: 8903334498995007506}
   - component: {fileID: 7234132639631623721}
+  - component: {fileID: 1876040567714183280}
   m_Layer: 5
   m_Name: InputField (TMP)
   m_TagString: Untagged
@@ -229,6 +230,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &1876040567714183280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4487720050808986052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 2
+  directGlobal: 1
+  components:
+  - {fileID: 3758294861673994722}
 --- !u!1 &5016042320779210801
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,6 +258,7 @@ GameObject:
   - component: {fileID: 1817646406625998760}
   - component: {fileID: 4856767966215096435}
   - component: {fileID: 8344423270810298727}
+  - component: {fileID: 4750740175889006346}
   m_Layer: 5
   m_Name: Delete
   m_TagString: Untagged
@@ -288,15 +306,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 3b592e6a03ba74dd68d22113b3b53e2b, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -347,6 +365,29 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 4856767966215096435}
   m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4750740175889006346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5016042320779210801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fb17decfc0cbd24f9fff64018f9dff6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyPallate
+  pallateName: Danger
+  isGlobal: 1
+  color1: []
+  color2: []
+  color3: []
+  color4:
+  - {fileID: 4856767966215096435}
+  color5: []
+  onColorUpdate:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &5743113452645145029
@@ -466,6 +507,7 @@ GameObject:
   - component: {fileID: 6139879484726683106}
   - component: {fileID: 8502522300557079846}
   - component: {fileID: 1665654907773568996}
+  - component: {fileID: 1166277578436353942}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -592,3 +634,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1166277578436353942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6879539609346962996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 4
+  directGlobal: 1
+  components:
+  - {fileID: 1665654907773568996}

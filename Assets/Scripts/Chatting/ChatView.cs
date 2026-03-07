@@ -1,28 +1,35 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class ChatView : Singleton<ChatView>
 {
     [SerializeField]
     private GameObject messagePrefab;
+    public TMP_InputField input;
     [SerializeField]
     private Transform group;
     [SerializeField]
-    private GameObject window;
+    private GameObject chatHistory;
     private Dictionary<string, TMP_InputField> messages = new Dictionary<string, TMP_InputField>();
+    
     private void OnEnable()
     {
-        CloseView();
         ChatManager.i.onMessageAdded.AddListener(Populate);
-        ChatManager.i.onMessageDeleted.AddListener(Populate);
+        ChatManager.i.onMessageDeleted.AddListener(Refresh);
     }
     private void OnDisable()
     {
         ChatManager.i.onMessageAdded.RemoveListener(Populate);
-        ChatManager.i.onMessageDeleted.RemoveListener(Populate);
+        ChatManager.i.onMessageDeleted.RemoveListener(Refresh);
     }
-    public void Populate()
+    public void Refresh()
+    {
+        OpenCollectionPanel();
+        OpenChatHistory();
+    }
+    private void Populate()
     {
         foreach (ChatMessage message in ChatManager.i.activeSession.messages)
         {
@@ -33,21 +40,29 @@ public class ChatView : Singleton<ChatView>
             TMP_InputField input = messageObj.transform.Find("Bubble/InputField (TMP)").GetComponent<TMP_InputField>();
             input.text = message.content;
             input.onEndEdit.AddListener(_ => EditMessageText(timestamp));
-            if(message.role != "user")
+            Button deleteButton = messageObj.transform.Find("Delete").GetComponent<Button>();
+            if (message.role != "user")
             {
-                input.GetComponent<RectTransform>().position = new Vector3(-150, 0, 0);
+                var messageRect = input.GetComponent<RectTransform>();
+                messageRect.anchoredPosition += new Vector2(-250, 0);
+
+                var deleteRect = deleteButton.GetComponent<RectTransform>();
+                deleteRect.anchoredPosition += new Vector2(-250, 0);
             }
             if (message.isLinkOutput)
             {
                 messageObj.SetActive(false);
             }
             messages.Add(timestamp, input);
+            deleteButton.onClick.AddListener(() => ChatManager.i.DeleteMessage(timestamp));
         }
+        input.transform.parent.SetAsLastSibling();
     }
     public void EditMessageText(string timestamp)
     {
         ChatMessage message = ChatManager.i.activeSession.messages.Find(c => c.timestamp == timestamp);
         message.content = messages[timestamp].text;
+        ChatManager.i.Save();
     }
     public void ClearMessages()
     {
@@ -60,14 +75,20 @@ public class ChatView : Singleton<ChatView>
         }
         messages.Clear();
     }
-    public void OpenView()
+    public void OpenCollectionPanel()
     {
+        FocusManager.i.FocusOn(nameof(ChatFocuser.i.collectionPanel));
+        SessionCollectionSelection.i.LoadUnits();
+    }
+    public void OpenSessionPanel()
+    {
+        FocusManager.i.FocusOn(nameof(ChatFocuser.i.sessionPanel));
+        SessionSelection.i.LoadUnits();
+    }
+    public void OpenChatHistory()
+    {
+        FocusManager.i.FocusOn(nameof(ChatFocuser.i.chatHistory));
         ClearMessages();
         Populate();
-        window.gameObject.SetActive(true);
-    }
-    public void CloseView()
-    {
-        window.gameObject.SetActive(false);
     }
 }

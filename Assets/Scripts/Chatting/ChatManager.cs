@@ -7,28 +7,42 @@ public class ChatManager : Singleton<ChatManager>
 {
     [HideInInspector]
     public List<ChatSession> sessions = new List<ChatSession>();
-    [SerializeField]
-    private TMP_InputField input;
+    [HideInInspector]
+    public List<ChatSessionCollection> sessionCollections = new List<ChatSessionCollection>();
     [SerializeField]
     private TMP_InputField sessionName;
+    [SerializeField]
+    private TMP_InputField collectionName;
     public ChatSession activeSession { get; private set; }
+    public ChatSessionCollection activeCollection { get; private set; }
 
     public UnityEvent onLoad;
     public UnityEvent onSave;
     public UnityEvent onMessageAdded;
     public UnityEvent onMessageDeleted;
+    public UnityEvent refresh;
     public void OnEnable()
     {
-        LoadSessions();
+        Load();
+        InvokeRepeating(nameof(Save), 2f, 2f);
     }
     private void Update()
     {
-        if(activeSession != null)
+        if(activeCollection != null)
         {
-            LorePanel.i.Initialize();
-            activeSession.name = sessionName.text;
-            activeSession.chainId = LorePanel.i.GetSelectedChainId();
+            activeCollection.name = collectionName.text;
+            if (activeSession != null)
+            {
+                activeSession.name = sessionName.text;
+                LorePanel.i.Initialize();
+                activeSession.chainId = LorePanel.i.GetSelectedChainId();
+            }
         }
+    }
+    public void SetActiveCollection(string collectionId)
+    {
+        activeCollection = sessionCollections.Find(s => s.id == collectionId);
+        collectionName.text = activeCollection.name;
     }
     public void SetActiveSession(string sessionId)
     {
@@ -50,7 +64,7 @@ public class ChatManager : Singleton<ChatManager>
         ChatMessage userMessage = new ChatMessage
         {
             role = "user",
-            content = input.text,
+            content = ChatView.i.input.text,
             isLinkOutput = false,
             timestamp = System.DateTime.Now.ToString("o")
         };
@@ -63,28 +77,57 @@ public class ChatManager : Singleton<ChatManager>
         }
         await ChainExecutor.Instance.Execute(chain, activeSession.messages);
     }
-    public void CreateNewSession()
+    public void CreateNewCollection()
     {
-        ChatSession newSession = new ChatSession
+        ChatSessionCollection newCollection = new ChatSessionCollection
         {
             id = System.Guid.NewGuid().ToString(),
+            name = "New Collection",
+            sessionIds = new List<string>()
+        };
+        sessionCollections.Add(newCollection);
+        Save();
+        Load();
+        Debug.Log("Created a new Collection.");
+    }
+    public void DeleteCurrentCollection()
+    {
+        if (activeCollection != null)
+        {
+            ChatView.i.OpenCollectionPanel();
+            sessionCollections.Remove(activeCollection);
+            activeCollection = null;
+            activeSession = null;
+            Save();
+        }
+        Debug.Log("Deleted current Collection!");
+    }
+    public void CreateNewSession()
+    {
+        string newId = System.Guid.NewGuid().ToString();
+        ChatSession newSession = new ChatSession
+        {
+            id = newId,
             name = "New Session",
             messages = new List<ChatMessage>()
         };
         sessions.Add(newSession);
-        SaveSessions();
-        SetActiveSession(newSession.id);
+        activeCollection.sessionIds.Add(newId);
+        Save();
+        Load();
         Debug.Log("Created a new Session.");
     }
     public void DeleteCurrentSession()
     {
         if (activeSession != null)
         {
-            ChatView.i.CloseView();
+            ChatView.i.OpenSessionPanel();
             sessions.Remove(activeSession);
+            activeCollection.sessionIds.Remove(activeSession.id);
             activeSession = null;
-            SaveSessions();
+            Save();
         }
+        Debug.Log("Deleted current Session!");
     }
     public void AddMessage(ChatMessage message)
     {
@@ -94,7 +137,7 @@ public class ChatManager : Singleton<ChatManager>
             return;
         }
         activeSession.messages.Add(message);
-        SaveSessions();
+        Save();
         onMessageAdded?.Invoke();
     }
     public void DeleteMessage(string timestamp)
@@ -108,34 +151,46 @@ public class ChatManager : Singleton<ChatManager>
         if (message != null)
         {
             activeSession.messages.Remove(message);
-            SaveSessions();
+            Save();
             onMessageDeleted?.Invoke();
         }
     }
-    public void DeleteMessageAt(int index)
-    {
-        if (activeSession == null || index < 0 || index >= activeSession.messages.Count)
-            return;
-        ChatMessage message = activeSession.messages[index];
-        activeSession.messages.RemoveAt(index);
-        SaveSessions();
-        onMessageDeleted?.Invoke();
-    }
-    public void SaveSessions()
+    public void Save()
     {
         ES3.Save("chatSessions", sessions);
+        ES3.Save("chatSessionCollections", sessionCollections);
         onSave?.Invoke();
     }
-    private void LoadSessions()
+    public void Load()
     {
         if (ES3.KeyExists("chatSessions"))
         {
             sessions = ES3.Load<List<ChatSession>>("chatSessions");
+        }
+        if (ES3.KeyExists("chatSessionCollections"))
+        {
+            sessionCollections = ES3.Load<List<ChatSessionCollection>>("chatSessionCollections");
         }
         onLoad?.Invoke();
     }
     public ChatSession GetSessionById(string id)
     {
         return sessions.Find(c => c.id == id);
+    }
+    public ChatSessionCollection GetCollectionById(string id)
+    {
+        return sessionCollections.Find(c => c.id == id);
+    }
+    public List<ChatSession> GetSessionsFromCurrentCollection()
+    {
+        List<ChatSession> sessions = new List<ChatSession>();
+        if(activeCollection == null) { return sessions; }
+        var sessionIds = sessionCollections.Find(c => c.id == activeCollection.id).sessionIds;
+        if(sessionIds == null) { return sessions; }
+        foreach (var sessionId in sessionIds)
+        {
+            sessions.Add(GetSessionById(sessionId));
+        }
+        return sessions;
     }
 }

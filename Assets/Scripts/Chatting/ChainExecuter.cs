@@ -51,11 +51,12 @@ public class ChainExecutor : Singleton<ChainExecutor>
                 return;
             }
             lastResponse = response;
+
             ChatMessage linkMessage = new ChatMessage
             {
                 role = "assistant",
                 content = response,
-                isLinkOutput = true,
+                isLinkOutput = (i != chain.links.Count - 1),
                 timestamp = DateTime.Now.ToString("o")
             };
             chatHistory.Add(linkMessage);

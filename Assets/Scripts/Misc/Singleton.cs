@@ -27,12 +27,14 @@ public class Singleton<T> : MonoBehaviour where T : Component
         {
             instance = this as T;
             //DontDestroyOnLoad(this.gameObject);
+            //Debug.Log($"Official instance of {typeof(T).Name} is at {this.transform.name}.");
         }
         else
         {
             if (instance != this)
             {
                 Destroy(this.gameObject);
+                Debug.LogWarning($"Danger! Second Singleton instance of {typeof(T).Name} destroyed at {this.transform.name}.");
             }
         }
     }
