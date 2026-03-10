@@ -18,11 +18,13 @@ public class ChatView : Singleton<ChatView>
     {
         ChatManager.i.onMessageAdded.AddListener(Populate);
         ChatManager.i.onMessageDeleted.AddListener(Refresh);
+        DragManager.i.onReorder.AddListener(UpdateIndexes);
     }
     private void OnDisable()
     {
         ChatManager.i.onMessageAdded.RemoveListener(Populate);
         ChatManager.i.onMessageDeleted.RemoveListener(Refresh);
+        DragManager.i.onReorder.RemoveListener(UpdateIndexes);
     }
     public void Refresh()
     {
@@ -57,6 +59,11 @@ public class ChatView : Singleton<ChatView>
             deleteButton.onClick.AddListener(() => ChatManager.i.DeleteMessage(timestamp));
         }
         input.transform.parent.SetAsLastSibling();
+    }
+    private void UpdateIndexes()
+    {
+        SessionCollectionSelection.i.UpdateIndexes();
+        SessionSelection.i.UpdateIndexes();
     }
     public void EditMessageText(string timestamp)
     {

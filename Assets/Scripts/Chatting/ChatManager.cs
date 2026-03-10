@@ -26,6 +26,10 @@ public class ChatManager : Singleton<ChatManager>
         Load();
         InvokeRepeating(nameof(Save), 2f, 2f);
     }
+    private void OnDisable()
+    {
+        Save();
+    }
     private void Update()
     {
         if(activeCollection != null)
@@ -112,7 +116,7 @@ public class ChatManager : Singleton<ChatManager>
             messages = new List<ChatMessage>()
         };
         sessions.Add(newSession);
-        activeCollection.sessionIds.Add(newId);
+        sessionCollections.Find(s => s.id == activeCollection.id).sessionIds.Add(newId);
         Save();
         Load();
         Debug.Log("Created a new Session.");
@@ -173,6 +177,36 @@ public class ChatManager : Singleton<ChatManager>
         }
         onLoad?.Invoke();
     }
+    public void SetCollectionIndexes(List<string> orderedCollectionIds)
+    {
+        for (int i = 0; i < orderedCollectionIds.Count; i++)
+        {
+            var collection = GetCollectionById(orderedCollectionIds[i]);
+            if (collection != null)
+            {
+                collection.index = i;
+            }
+        }
+        Save();
+    }
+    public void SetSessionIndexes(List<string> orderedSessionIds)
+    {
+        if (activeCollection == null)
+        {
+            Debug.LogWarning("No active collection.");
+            return;
+        }
+        for (int i = 0; i < orderedSessionIds.Count; i++)
+        {
+            var session = GetSessionById(orderedSessionIds[i]);
+            if (session != null)
+            {
+                session.index = i;
+            }
+        }
+        activeCollection.sessionIds = new List<string>(orderedSessionIds);
+        Save();
+    }
     public ChatSession GetSessionById(string id)
     {
         return sessions.Find(c => c.id == id);
@@ -184,7 +218,11 @@ public class ChatManager : Singleton<ChatManager>
     public List<ChatSession> GetSessionsFromCurrentCollection()
     {
         List<ChatSession> sessions = new List<ChatSession>();
-        if(activeCollection == null) { return sessions; }
+        if(activeCollection == null) 
+        {
+            Debug.LogWarning("Trying to access non-active collection.");
+            return sessions; 
+        }
         var sessionIds = sessionCollections.Find(c => c.id == activeCollection.id).sessionIds;
         if(sessionIds == null) { return sessions; }
         foreach (var sessionId in sessionIds)

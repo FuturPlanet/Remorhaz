@@ -178,7 +178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
-  colorId: 3
+  colorId: 5
   directGlobal: 1
   components:
   - {fileID: 1239863919411029950}
@@ -393,7 +393,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
-  colorId: 5
+  colorId: 3
   directGlobal: 1
   components:
   - {fileID: 2299169782708511538}

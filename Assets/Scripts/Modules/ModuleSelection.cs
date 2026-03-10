@@ -106,9 +106,9 @@ public class ModuleSelection : Singleton<ModuleSelection>
     }
     public void LoadUnits()
     {
+        if (DragManager.i.isDragging) return;
         var modules = ModuleEditor.i.modules;
         Transform createNewButton = null;
-
         foreach (Transform child in group)
         {
             if (child.CompareTag("Unit"))
@@ -120,7 +120,6 @@ public class ModuleSelection : Singleton<ModuleSelection>
                 Destroy(child.gameObject);
             }
         }
-
         foreach (var module in modules)
         {
             var moduleObj = Instantiate(unitPrefab, group);
@@ -131,7 +130,6 @@ public class ModuleSelection : Singleton<ModuleSelection>
             string moduleId = module.id;
             button.onClick.AddListener(() => OpenModule(moduleId));
         }
-
         createNewButton?.SetAsLastSibling();
     }
     public void DeleteCurrentModule()
@@ -151,22 +149,18 @@ public class ModuleSelection : Singleton<ModuleSelection>
         SaveCurrentModule();
         Module module = ModuleEditor.i.GetModuleById(id);
         if (module == null) return;
-
         rawToggle.onToggle.RemoveAllListeners();
         rawToggle.onToggle.AddListener(() => OpenModule(id, true));
-
         if(toggle)
         {
             module.isRaw = !module.isRaw;
         }
-
         currentModule = module;
         visual.SetActive(true);
         rawName.text = module.name;
         basicName.text = module.name;
         basicID.text = module.model;
         rawID.text = module.model;
-
         if (module.isRaw)
         {
             rawParameters.gameObject.SetActive(true);
@@ -202,7 +196,7 @@ public class ModuleSelection : Singleton<ModuleSelection>
         }
         catch
         {
-            return json; // Return as-is if invalid
+            return json;
         }
     }
     private string GetParameter(Module module, string key)

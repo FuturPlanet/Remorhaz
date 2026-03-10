@@ -93,7 +93,8 @@ GameObject:
   - component: {fileID: 5888661291532912336}
   - component: {fileID: 6196684646238330874}
   - component: {fileID: 2367250779394111431}
-  - component: {fileID: 7580014593976792135}
+  - component: {fileID: 3287289450518226507}
+  - component: {fileID: -3864051253420580471}
   - component: {fileID: 3273522092716842656}
   m_Layer: 5
   m_Name: ScrollUnit
@@ -160,7 +161,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7580014593976792135
+--- !u!114 &3287289450518226507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888258702346352424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 218fbdc1778ee0d4ebc39c0a670d421b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DragAble
+  dragThreshold: 1
+--- !u!114 &-3864051253420580471
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

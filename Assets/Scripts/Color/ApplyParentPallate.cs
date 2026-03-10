@@ -17,6 +17,7 @@ public class ApplyParentPallate : MonoBehaviour
     }
     private void OnDisable()
     {
+        if (ColorManager.i == null) return;
         ColorManager.i.onGlobalPallteChange.RemoveListener(UpdateColors);
         ColorManager.i.onMasterUpdateColors.RemoveListener(UpdateColors);
     }

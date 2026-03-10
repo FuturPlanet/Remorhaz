@@ -75,11 +75,12 @@ public class ChainSelection : Singleton<ChainSelection>
     }
     public void LoadUnits()
     {
+        if (DragManager.i.isDragging) return;
         var chains = ChainEditor.i.chains;
         Transform createNewButton = null;
         foreach (Transform child in group)
         {
-            if (child.tag == "Unit")
+            if (child.CompareTag("Unit"))
             {
                 createNewButton = child;
             }

@@ -1,8 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.CoreUtils;
-
 public class SessionCollectionSelection : Singleton<SessionCollectionSelection>
 {
     [SerializeField]
@@ -20,29 +20,49 @@ public class SessionCollectionSelection : Singleton<SessionCollectionSelection>
     }
     public void LoadUnits()
     {
+        if (DragManager.i.isDragging) return;
         var collections = ChatManager.i.sessionCollections;
-        if (collections == null) { return; }
         Transform createNewButton = null;
         foreach (Transform child in group)
         {
-            if (child.tag == "Unit")
+            if (child.CompareTag("Unit"))
             {
-                createNewButton = child;
+                if(child.name == "Create New")
+                {
+                    createNewButton = child;
+                }
             }
             else
             {
                 Destroy(child.gameObject);
             }
         }
-        foreach (ChatSessionCollection collection in collections)
+        foreach (ChatSessionCollection collection in collections.OrderBy(c => c.index))
         {
             var collectionObj = Instantiate(unitPrefab, group);
             collectionObj.name = string.IsNullOrEmpty(collection.name) ? "New Session" : collection.name;
             var button = collectionObj.transform.Find("Button").GetComponent<Button>();
             collectionObj.transform.Find("Button/Text (TMP)").GetComponent<TMP_Text>().text = collection.name;
+            collectionObj.GetComponent<InfoHolder>().info.Add("collectionId", collection.id);
             button.onClick.AddListener(() => OpenCollection(collection.id));
         }
         createNewButton.SetAsLastSibling();
+    }
+    public void UpdateIndexes()
+    {
+        List<string> orderedIds = new List<string>();
+        foreach (Transform child in group)
+        {
+            if (child.tag == "Unit") continue;
+            string collectionId = child.GetComponent<InfoHolder>().info["collectionId"].ToString();
+            if (ChatManager.i.GetCollectionById(collectionId) == null)
+            {
+                Debug.LogWarning("Could not update Indexes.");
+                return;
+            }
+            orderedIds.Add(collectionId);
+        }
+        ChatManager.i.SetCollectionIndexes(orderedIds);
     }
     public void OpenCollection(string id)
     {

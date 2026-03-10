@@ -4,11 +4,17 @@ using UnityEngine;
 public class Singleton<T> : MonoBehaviour where T : Component
 {
     private static T instance;
+    private static bool applicationIsQuitting = false;
     public static T i => Instance;
     public static T Instance
     {
         get
         {
+            if (applicationIsQuitting)
+            {
+                return null;
+            }
+
             if (instance == null)
             {
                 instance = FindAnyObjectByType<T>();
@@ -21,7 +27,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
             return instance;
         }
     }
-    private void Awake()
+    protected virtual void Awake()
     {
         if (instance == null)
         {
@@ -37,5 +43,9 @@ public class Singleton<T> : MonoBehaviour where T : Component
                 Debug.LogWarning($"Danger! Second Singleton instance of {typeof(T).Name} destroyed at {this.transform.name}.");
             }
         }
+    }
+    protected virtual void OnApplicationQuit()
+    {
+        applicationIsQuitting = true;
     }
 }

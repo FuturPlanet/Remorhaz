@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class LorePanel : Singleton<LorePanel>
 {
@@ -33,6 +31,7 @@ public class LorePanel : Singleton<LorePanel>
     }
     public string GetSelectedChainId()
     {
+        if(ChainEditor.i.chains.Count == 0) { return "No Chain Created"; }
         return ChainEditor.i.chains[chainSelection.value].id;
     }
 }

@@ -10,10 +10,10 @@ public class ChainExecutor : Singleton<ChainExecutor>
     public int totalSteps { get; private set; }
     public float progress => totalSteps > 0 ? (float)currentStep / totalSteps : 0f;
 
-    public event Action<int, int> OnStepStarted;        // currentStep, totalSteps
-    public event Action<int, string> OnStepCompleted;   // currentStep, response
-    public event Action<string> OnChainCompleted;       // final response
-    public event Action<string> OnChainFailed;          // error message
+    public event Action<int, int> OnStepStarted;     
+    public event Action<int, string> OnStepCompleted;
+    public event Action<string> OnChainCompleted;    
+    public event Action<string> OnChainFailed;       
     public async Task Execute(Chain chain, List<ChatMessage> chatHistory)
     {
         if (isRunning)

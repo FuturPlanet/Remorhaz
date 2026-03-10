@@ -7,7 +7,6 @@ public class OpenRouterManager : Singleton<OpenRouterManager>
 {
     private static readonly HttpClient httpClient = new HttpClient();
     private string apiUrl = "https://openrouter.ai/api/v1/chat/completions";
-    private string apiKey = "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";
 
     public async Task<string> Send(string jsonBody)
     {
@@ -15,7 +14,7 @@ public class OpenRouterManager : Singleton<OpenRouterManager>
 
         var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
         httpClient.DefaultRequestHeaders.Clear();
-        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {OptionsManager.i.openRouterSettings.apikey}");
 
         var response = await httpClient.PostAsync(apiUrl, content);
         string responseJson = await response.Content.ReadAsStringAsync();
