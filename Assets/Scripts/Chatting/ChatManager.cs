@@ -65,14 +65,19 @@ public class ChatManager : Singleton<ChatManager>
             Debug.LogWarning("Chain already running.");
             return;
         }
+        var inputMessage = ChatView.i.input.text;
         ChatMessage userMessage = new ChatMessage
         {
             role = "user",
-            content = ChatView.i.input.text,
+            content = inputMessage,
             isLinkOutput = false,
             timestamp = System.DateTime.Now.ToString("o")
         };
-        AddMessage(userMessage);
+        if (!string.IsNullOrEmpty(inputMessage))
+        {
+            AddMessage(userMessage);
+        }
+        ChatView.i.input.text = "";
         Chain chain = ChainEditor.Instance.GetChainById(activeSession.chainId);
         if (chain == null)
         {

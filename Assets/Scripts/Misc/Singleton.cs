@@ -17,7 +17,7 @@ public class Singleton<T> : MonoBehaviour where T : Component
 
             if (instance == null)
             {
-                instance = FindAnyObjectByType<T>();
+                instance = FindAnyObjectByType<T>(FindObjectsInactive.Include);
                 if (instance == null)
                 {
                     GameObject gameObject = new GameObject(typeof(T).Name);
