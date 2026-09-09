@@ -6,6 +6,14 @@ public class LorePanel : Singleton<LorePanel>
 {
     [SerializeField]
     private TMP_Dropdown chainSelection;
+    private void OnEnable()
+    {
+        chainSelection.onValueChanged.AddListener(OnChainSelectionChanged);
+    }
+    private void OnDisable()
+    {
+        chainSelection.onValueChanged.RemoveListener(OnChainSelectionChanged);
+    }
     public void Initialize()
     {
         UpdateChains();
@@ -26,12 +34,17 @@ public class LorePanel : Singleton<LorePanel>
             }
         }
         chainSelection.AddOptions(options);
-        chainSelection.value = selectedIndex;
+        chainSelection.SetValueWithoutNotify(selectedIndex);
         chainSelection.RefreshShownValue();
+    }
+
+    private void OnChainSelectionChanged(int index)
+    {
+        ChatManager.i.SetActiveChain(GetSelectedChainId());
     }
     public string GetSelectedChainId()
     {
-        if(ChainEditor.i.chains.Count == 0) { return "No Chain Created"; }
+        if (ChainEditor.i.chains.Count == 0) { return "No Chain Created"; }
         return ChainEditor.i.chains[chainSelection.value].id;
     }
 }

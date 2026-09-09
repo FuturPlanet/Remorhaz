@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 public class PromptBuilder
@@ -12,93 +15,81 @@ public class PromptBuilder
             Debug.LogError($"Module with id {link.moduleId} not found.");
             return null;
         }
-        List<ChatMessage> selectedMessages = SelectMessages(chatHistory, link);
-        string baseJson = GetBaseJson(module);
-        string finalJson = MergeJson(baseJson, module.model, link.prompt, selectedMessages);
-        return finalJson;
+
+        JObject body = GetBaseJson(module);
+        body["model"] = module.model;
+
+        var messages = new JArray();
+        if (!string.IsNullOrWhiteSpace(link.prompt))
+            messages.Add(new JObject { ["role"] = "system", ["content"] = link.prompt });
+
+        foreach (var m in SelectMessages(chatHistory, link))
+            messages.Add(ToApiMessage(m, link.replayReasoning));
+
+        body["messages"] = messages;
+
+        if (link.maxTokens > 0) body["max_tokens"] = link.maxTokens;
+
+        return body.ToString(Formatting.None);
+    }
+    private static JObject ToApiMessage(ChatMessage m, bool replayReasoning)
+    {
+        var o = new JObject { ["role"] = m.role, ["content"] = m.content ?? "" };
+
+        if (replayReasoning && m.role == "assistant" && !string.IsNullOrEmpty(m.reasoningDetailsJson))
+        {
+            try { o["reasoning_details"] = JArray.Parse(m.reasoningDetailsJson); }
+            catch { /* stale/garbage cache: just omit */ }
+        }
+        return o;
     }
     private static List<ChatMessage> SelectMessages(List<ChatMessage> chatHistory, ChainLink link)
     {
         var linkOutputs = chatHistory.Where(m => m.isLinkOutput).ToList();
         var regularMessages = chatHistory.Where(m => !m.isLinkOutput).ToList();
-        var selectedLinkOutputs = linkOutputs.Skip(Mathf.Max(0, linkOutputs.Count - link.chainDepth)).ToList();
-        var selectedRegular = regularMessages.Skip(Mathf.Max(0, regularMessages.Count - link.messageDepth)).ToList();
-        var combined = new List<ChatMessage>();
-        combined.AddRange(selectedLinkOutputs);
-        combined.AddRange(selectedRegular);
-        combined = combined.OrderBy(m => m.timestamp).ToList();
-        return combined;
+
+        var selected = new List<ChatMessage>();
+        selected.AddRange(linkOutputs.Skip(Mathf.Max(0, linkOutputs.Count - link.chainDepth)));
+        selected.AddRange(regularMessages.Skip(Mathf.Max(0, regularMessages.Count - link.messageDepth)));
+
+        return selected.OrderBy(m => m.timestamp, System.StringComparer.Ordinal).ToList();
     }
-    private static string GetBaseJson(Module module)
+    private static JObject GetBaseJson(Module module)
     {
         if (module.isRaw)
         {
-            string rawJson = module.parameters.Find(p => p.key == "rawJson")?.value;
-            if (!string.IsNullOrEmpty(rawJson)) return rawJson;
+            string raw = module.parameters.Find(p => p.key == "rawJson")?.value;
+            if (!string.IsNullOrWhiteSpace(raw))
+            {
+                try { return JObject.Parse(raw); }
+                catch (JsonReaderException e)
+                {
+                    Debug.LogError($"[PromptBuilder] Invalid rawJson on module '{module.id}': {e.Message}");
+                    return new JObject();
+                }
+            }
         }
-        var paramDict = new Dictionary<string, object>();
-        foreach (var param in module.parameters)
-        {
-            if (float.TryParse(param.value, out float floatVal))
-                paramDict[param.key] = floatVal;
-            else if (int.TryParse(param.value, out int intVal))
-                paramDict[param.key] = intVal;
-            else if (bool.TryParse(param.value, out bool boolVal))
-                paramDict[param.key] = boolVal;
-            else
-                paramDict[param.key] = param.value;
-        }
-        return DictToJson(paramDict);
-    }
-    private static string MergeJson(string baseJson, string model, string systemPrompt, List<ChatMessage> messages)
-    {
-        string messagesArray = "[";
-        bool first = true;
-        foreach (var msg in messages)
-        {
-            if (!first) messagesArray += ",";
-            messagesArray += $"{{\"role\":\"{msg.role}\",\"content\":\"{EscapeJson(msg.content)}\"}}";
-            first = false;
-        }
-        if (!first) messagesArray += ",";
-        messagesArray += $"{{\"role\":\"system\",\"content\":\"{EscapeJson(systemPrompt)}\"}}";
 
-        messagesArray += "]";
-
-        baseJson = baseJson.Trim();
-        if (string.IsNullOrEmpty(baseJson) || baseJson == "{}")
+        var body = new JObject();
+        foreach (var p in module.parameters)
         {
-            return $"{{\"model\":\"{model}\",\"messages\":{messagesArray}}}";
+            if (p.key == "rawJson") continue;
+            body[p.key] = ParseValue(p.value);
         }
-        baseJson = baseJson.TrimEnd('}');
-        return $"{baseJson},\"model\":\"{model}\",\"messages\":{messagesArray}}}";
+        return body;
     }
-    private static string DictToJson(Dictionary<string, object> dict)
+    private static JToken ParseValue(string v)
     {
-        string json = "{";
-        int count = 0;
-        foreach (var kvp in dict)
-        {
-            if (kvp.Value is string strVal)
-                json += $"\"{kvp.Key}\":\"{EscapeJson(strVal)}\"";
-            else if (kvp.Value is float f)
-                json += $"\"{kvp.Key}\":{f.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
-            else if (kvp.Value is double d)
-                json += $"\"{kvp.Key}\":{d.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
-            else
-                json += $"\"{kvp.Key}\":{kvp.Value.ToString().ToLower()}";
+        if (string.IsNullOrEmpty(v)) return JValue.CreateNull();
+        string t = v.Trim();
 
-            if (++count < dict.Count) json += ",";
+        if (t.StartsWith("{") || t.StartsWith("["))
+        {
+            try { return JToken.Parse(t); } catch { /* treat as string */ }
         }
-        json += "}";
-        return json;
-    }
-    private static string EscapeJson(string str)
-    {
-        return str.Replace("\\", "\\\\")
-                  .Replace("\"", "\\\"")
-                  .Replace("\n", "\\n")
-                  .Replace("\r", "\\r")
-                  .Replace("\t", "\\t");
+        if (bool.TryParse(t, out bool b)) return new JValue(b);
+        if (long.TryParse(t, NumberStyles.Integer, CultureInfo.InvariantCulture, out long i)) return new JValue(i);
+        if (double.TryParse(t, NumberStyles.Float, CultureInfo.InvariantCulture, out double d)) return new JValue(d);
+        return new JValue(v);
     }
 }

@@ -10,6 +10,8 @@ public struct Focus
 public class FocusManager : Singleton<FocusManager>
 {
     private Dictionary<string, Focus> focuses = new Dictionary<string, Focus>();
+    [SerializeField]
+    private bool supressConsole;
     public string Add(GameObject off, GameObject on, string key = "")
     {
         return Add(new[] { off }, new[] { on }, key);
@@ -63,6 +65,6 @@ public class FocusManager : Singleton<FocusManager>
         {
             on.SetActive(!reverse);
         }
-        Debug.Log($"Focusing on: {key}! Off: [{string.Join(", ", focus.toTurnOff.Select(g => g.name))}] | On: [{string.Join(", ", focus.toTurnOn.Select(g => g.name))}]");
+        if (!supressConsole) { Debug.Log($"Focusing on: {key}! Off: [{string.Join(", ", focus.toTurnOff.Select(g => g.name))}] | On: [{string.Join(", ", focus.toTurnOn.Select(g => g.name))}]"); }
     }
 }

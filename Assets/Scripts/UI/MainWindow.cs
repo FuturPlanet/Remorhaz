@@ -13,6 +13,7 @@ public class MainWindow : MonoBehaviour
         {
             foreach (Transform child in mainwindow.parent)
             {
+                child.gameObject.SetActive(true);
                 child.gameObject.SetActive(false);
             }
         }
@@ -20,6 +21,7 @@ public class MainWindow : MonoBehaviour
         {
             foreach (Transform child in windows)
             {
+                child.gameObject.SetActive(true);
                 child.gameObject.SetActive(false);
             }
         }

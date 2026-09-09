@@ -7,6 +7,8 @@ public class ChatView : Singleton<ChatView>
 {
     [SerializeField]
     private GameObject messagePrefab;
+    [SerializeField]
+    private GameObject linkHiderPrefab;
     public TMP_InputField input;
     [SerializeField]
     private Transform group;
@@ -43,17 +45,20 @@ public class ChatView : Singleton<ChatView>
             input.text = message.content;
             input.onEndEdit.AddListener(_ => EditMessageText(timestamp));
             Button deleteButton = messageObj.transform.Find("Delete").GetComponent<Button>();
-            if (message.role != "user")
-            {
-                var messageRect = input.GetComponent<RectTransform>();
-                messageRect.anchoredPosition += new Vector2(-250, 0);
+            //if (message.role != "user")
+            //{
+            //    var messageRect = input.GetComponent<RectTransform>();
+            //    messageRect.anchoredPosition += new Vector2(-250, 0);
 
-                var deleteRect = deleteButton.GetComponent<RectTransform>();
-                deleteRect.anchoredPosition += new Vector2(-250, 0);
-            }
+            //    var deleteRect = deleteButton.GetComponent<RectTransform>();
+            //    deleteRect.anchoredPosition += new Vector2(-250, 0);
+            //}
             if (message.isLinkOutput)
             {
                 messageObj.SetActive(false);
+                var linkObj = Instantiate(linkHiderPrefab, group);
+                linkObj.name = messageObj.name;
+                linkObj.transform.Find("Bubble/InputField (TMP)").GetComponent<TMP_InputField>().text = message.content;
             }
             messages.Add(timestamp, input);
             deleteButton.onClick.AddListener(() => ChatManager.i.DeleteMessage(timestamp));

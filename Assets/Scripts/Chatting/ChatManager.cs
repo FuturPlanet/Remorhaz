@@ -21,6 +21,13 @@ public class ChatManager : Singleton<ChatManager>
     public UnityEvent onMessageAdded;
     public UnityEvent onMessageDeleted;
     public UnityEvent refresh;
+
+    private void Awake()
+    {
+        sessionName.onValueChanged.AddListener(OnSessionNameChanged);
+        collectionName.onValueChanged.AddListener(OnCollectionNameChanged);
+    }
+
     public void OnEnable()
     {
         Load();
@@ -30,19 +37,31 @@ public class ChatManager : Singleton<ChatManager>
     {
         Save();
     }
-    private void Update()
+    private void OnCollectionNameChanged(string value)
     {
-        if(activeCollection != null)
+        if (activeCollection != null)
         {
-            activeCollection.name = collectionName.text;
-            if (activeSession != null)
-            {
-                activeSession.name = sessionName.text;
-                LorePanel.i.Initialize();
-                activeSession.chainId = LorePanel.i.GetSelectedChainId();
-            }
+            activeCollection.name = value;
         }
     }
+    private void OnSessionNameChanged(string value)
+    {
+        if (activeSession != null)
+        {
+            activeSession.name = value;
+        }
+    }
+    public void SetActiveChain(string chainId)
+    {
+        if (activeSession == null)
+        {
+            Debug.LogWarning("[ChatManager] No active session.");
+            return;
+        }
+        activeSession.chainId = chainId;
+        Save();
+    }
+
     public void SetActiveCollection(string collectionId)
     {
         activeCollection = sessionCollections.Find(s => s.id == collectionId);
@@ -52,17 +71,18 @@ public class ChatManager : Singleton<ChatManager>
     {
         activeSession = sessions.Find(s => s.id == sessionId);
         sessionName.text = activeSession.name;
+        LorePanel.i.Initialize();
     }
     public async void Send()
     {
         if (activeSession == null)
         {
-            Debug.LogWarning("No active session.");
+            Debug.LogWarning("[ChatManager] No active session.");
             return;
         }
         if (ChainExecutor.Instance.isRunning)
         {
-            Debug.LogWarning("Chain already running.");
+            Debug.LogWarning("[ChatManager] Chain already running.");
             return;
         }
         var inputMessage = ChatView.i.input.text;
@@ -81,7 +101,7 @@ public class ChatManager : Singleton<ChatManager>
         Chain chain = ChainEditor.Instance.GetChainById(activeSession.chainId);
         if (chain == null)
         {
-            Debug.LogError($"Chain '{activeSession.chainId}' not found.");
+            Debug.LogError($"[ChatManager] Chain '{activeSession.chainId}' not found.");
             return;
         }
         await ChainExecutor.Instance.Execute(chain, activeSession.messages);
@@ -97,7 +117,7 @@ public class ChatManager : Singleton<ChatManager>
         sessionCollections.Add(newCollection);
         Save();
         Load();
-        Debug.Log("Created a new Collection.");
+        Debug.Log("[ChatManager] Created a new Collection.");
     }
     public void DeleteCurrentCollection()
     {
@@ -109,7 +129,7 @@ public class ChatManager : Singleton<ChatManager>
             activeSession = null;
             Save();
         }
-        Debug.Log("Deleted current Collection!");
+        Debug.Log("[ChatManager] Deleted current Collection!");
     }
     public void CreateNewSession()
     {
@@ -124,7 +144,7 @@ public class ChatManager : Singleton<ChatManager>
         sessionCollections.Find(s => s.id == activeCollection.id).sessionIds.Add(newId);
         Save();
         Load();
-        Debug.Log("Created a new Session.");
+        Debug.Log("[ChatManager] Created a new Session.");
     }
     public void DeleteCurrentSession()
     {
@@ -136,13 +156,13 @@ public class ChatManager : Singleton<ChatManager>
             activeSession = null;
             Save();
         }
-        Debug.Log("Deleted current Session!");
+        Debug.Log("[ChatManager] Deleted current Session!");
     }
     public void AddMessage(ChatMessage message)
     {
         if (activeSession == null)
         {
-            Debug.LogWarning("No active session.");
+            Debug.LogWarning("[ChatManager] No active session.");
             return;
         }
         activeSession.messages.Add(message);
@@ -153,16 +173,32 @@ public class ChatManager : Singleton<ChatManager>
     {
         if (activeSession == null)
         {
-            Debug.LogWarning("No active session.");
+            Debug.LogWarning("[ChatManager] No active session.");
             return;
         }
-        ChatMessage message = activeSession.messages.Find(m => m.timestamp == timestamp);
-        if (message != null)
+        List<ChatMessage> messages = activeSession.messages;
+        int index = messages.FindIndex(m => m.timestamp == timestamp);
+        if (index == -1)
         {
-            activeSession.messages.Remove(message);
-            Save();
-            onMessageDeleted?.Invoke();
+            return;
         }
+        ChatMessage target = messages[index];
+        List<ChatMessage> toRemove = new List<ChatMessage> { target };
+        if (!target.isLinkOutput)
+        {
+            int i = index - 1;
+            while (i >= 0 && messages[i].isLinkOutput)
+            {
+                toRemove.Add(messages[i]);
+                i--;
+            }
+        }
+        foreach (ChatMessage m in toRemove)
+        {
+            messages.Remove(m);
+        }
+        Save();
+        onMessageDeleted?.Invoke();
     }
     public void Save()
     {
@@ -198,7 +234,7 @@ public class ChatManager : Singleton<ChatManager>
     {
         if (activeCollection == null)
         {
-            Debug.LogWarning("No active collection.");
+            Debug.LogWarning("[ChatManager] No active collection.");
             return;
         }
         for (int i = 0; i < orderedSessionIds.Count; i++)
@@ -223,13 +259,13 @@ public class ChatManager : Singleton<ChatManager>
     public List<ChatSession> GetSessionsFromCurrentCollection()
     {
         List<ChatSession> sessions = new List<ChatSession>();
-        if(activeCollection == null) 
+        if (activeCollection == null)
         {
-            Debug.LogWarning("Trying to access non-active collection.");
-            return sessions; 
+            Debug.LogWarning("[ChatManager] Trying to access non-active collection.");
+            return sessions;
         }
         var sessionIds = sessionCollections.Find(c => c.id == activeCollection.id).sessionIds;
-        if(sessionIds == null) { return sessions; }
+        if (sessionIds == null) { return sessions; }
         foreach (var sessionId in sessionIds)
         {
             sessions.Add(GetSessionById(sessionId));
