@@ -9,6 +9,8 @@ public class ChatManager : Singleton<ChatManager>
     public List<ChatSession> sessions = new List<ChatSession>();
     [HideInInspector]
     public List<ChatSessionCollection> sessionCollections = new List<ChatSessionCollection>();
+    [HideInInspector]
+    public Dictionary<string,string> trees = new Dictionary<string, string>();
     [SerializeField]
     private TMP_InputField sessionName;
     [SerializeField]
@@ -202,6 +204,7 @@ public class ChatManager : Singleton<ChatManager>
     {
         ES3.Save("chatSessions", sessions);
         ES3.Save("chatSessionCollections", sessionCollections);
+        ES3.Save("trees", trees);
         onSave?.Invoke();
     }
     public void Load()
@@ -213,6 +216,10 @@ public class ChatManager : Singleton<ChatManager>
         if (ES3.KeyExists("chatSessionCollections"))
         {
             sessionCollections = ES3.Load<List<ChatSessionCollection>>("chatSessionCollections");
+        }
+        if (ES3.KeyExists("trees"))
+        {
+            trees = ES3.Load<Dictionary<string, string>>("trees");
         }
         onLoad?.Invoke();
     }

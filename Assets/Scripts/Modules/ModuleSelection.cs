@@ -106,7 +106,7 @@ public class ModuleSelection : Singleton<ModuleSelection>
     }
     public void LoadUnits()
     {
-        if (DragManager.i.isDragging) return;
+        if (DragPanelManager.i.isDragging) return;
         var modules = ModuleEditor.i.modules;
         Transform createNewButton = null;
         foreach (Transform child in group)

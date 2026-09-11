@@ -24,9 +24,10 @@ public class SessionSelection : Singleton<SessionSelection>
     }
     public void LoadUnits()
     {
-        if (DragManager.i.isDragging) return;
+        if (DragPanelManager.i.isDragging) return;
         var sessions = ChatManager.i.GetSessionsFromCurrentCollection();
         Transform createNewButton = null;
+        Transform createFolderButton = null;
         foreach (Transform child in group)
         {
             if (child.CompareTag("Unit"))
@@ -34,6 +35,10 @@ public class SessionSelection : Singleton<SessionSelection>
                 if (child.name == "Create New")
                 {
                     createNewButton = child;
+                }
+                else if (child.name == "Create Folder")
+                {
+                    createFolderButton = child;
                 }
             }
             else
@@ -44,6 +49,16 @@ public class SessionSelection : Singleton<SessionSelection>
         foreach (ChatSession session in sessions.OrderBy(c => c.index))
         {
             var sessionObj = Instantiate(unitPrefab, group);
+
+            if (ChatManager.i.trees.ContainsKey("sessionSelection"))
+            {
+                DragPanelManager.i.LoadTree(group, ChatManager.i.trees["sessionSelection"]);
+            }
+            else
+            {
+                ChatManager.i.trees["sessionSelection"] = DragPanelManager.i.CreateTree(group);
+                ChatManager.i.Save();
+            }
             sessionObj.name = string.IsNullOrEmpty(session.name) ? "New Session" : session.name;
             var button = sessionObj.transform.Find("Button").GetComponent<Button>();
             sessionObj.transform.Find("Button/Text (TMP)").GetComponent<TMP_Text>().text = session.name;
@@ -51,6 +66,7 @@ public class SessionSelection : Singleton<SessionSelection>
             button.onClick.AddListener(() => OpenSession(session.id));
         }
         createNewButton.SetAsLastSibling();
+        createFolderButton.SetAsLastSibling();
     }
     public void UpdateIndexes()
     {

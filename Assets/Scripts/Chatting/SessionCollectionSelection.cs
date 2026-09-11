@@ -24,16 +24,21 @@ public class SessionCollectionSelection : Singleton<SessionCollectionSelection>
     }
     public void LoadUnits()
     {
-        if (DragManager.i.isDragging) return;
+        if (DragPanelManager.i.isDragging) return;
         var collections = ChatManager.i.sessionCollections;
         Transform createNewButton = null;
+        Transform createFolderButton = null;
         foreach (Transform child in group)
         {
             if (child.CompareTag("Unit"))
             {
-                if(child.name == "Create New")
+                if (child.name == "Create New")
                 {
                     createNewButton = child;
+                }
+                else if (child.name == "Create Folder")
+                {
+                    createFolderButton = child;
                 }
             }
             else
@@ -44,6 +49,16 @@ public class SessionCollectionSelection : Singleton<SessionCollectionSelection>
         foreach (ChatSessionCollection collection in collections.OrderBy(c => c.index))
         {
             var collectionObj = Instantiate(unitPrefab, group);
+
+            if (ChatManager.i.trees.ContainsKey("sessionCollectionSelection"))
+            {
+                DragPanelManager.i.LoadTree(group, ChatManager.i.trees["sessionCollectionSelection"]);
+            }
+            else
+            {
+                ChatManager.i.trees["sessionCollectionSelection"] = DragPanelManager.i.CreateTree(group);
+                ChatManager.i.Save();
+            }
             collectionObj.name = string.IsNullOrEmpty(collection.name) ? "New Session" : collection.name;
             var button = collectionObj.transform.Find("Button").GetComponent<Button>();
             collectionObj.transform.Find("Button/Text (TMP)").GetComponent<TMP_Text>().text = collection.name;
@@ -51,6 +66,7 @@ public class SessionCollectionSelection : Singleton<SessionCollectionSelection>
             button.onClick.AddListener(() => OpenCollection(collection.id));
         }
         createNewButton.SetAsLastSibling();
+        createFolderButton.SetAsLastSibling();
     }
     public void UpdateIndexes()
     {

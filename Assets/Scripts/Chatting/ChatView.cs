@@ -22,7 +22,7 @@ public class ChatView : Singleton<ChatView>
     {
         ChatManager.i.onMessageAdded.AddListener(Populate);
         ChatManager.i.onMessageDeleted.AddListener(Refresh);
-        DragManager.i.onReorder.AddListener(UpdateIndexes);
+        DragPanelManager.i.onReorder.AddListener(UpdateIndexes);
     }
     private void OnDisable()
     {
@@ -31,9 +31,9 @@ public class ChatView : Singleton<ChatView>
             ChatManager.i.onMessageAdded.RemoveListener(Populate);
             ChatManager.i.onMessageDeleted.RemoveListener(Refresh);
         }
-        if (DragManager.i != null)
+        if (DragPanelManager.i != null)
         {
-            DragManager.i.onReorder.RemoveListener(UpdateIndexes);
+            DragPanelManager.i.onReorder.RemoveListener(UpdateIndexes);
         }
     }
     public void Refresh()

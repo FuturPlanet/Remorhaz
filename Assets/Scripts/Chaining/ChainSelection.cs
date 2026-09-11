@@ -82,7 +82,7 @@ public class ChainSelection : Singleton<ChainSelection>
     }
     public void LoadUnits()
     {
-        if (DragManager.i.isDragging) return;
+        if (DragPanelManager.i.isDragging) return;
         var chains = ChainEditor.i.chains;
         Transform createNewButton = null;
         foreach (Transform child in group)
