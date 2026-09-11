@@ -17,8 +17,11 @@ public class ChatFocuser : Singleton<ChatFocuser>
     }
     private void OnDisable()
     {
-        FocusManager.i.Remove(nameof(collectionPanel));
-        FocusManager.i.Remove(nameof(sessionPanel));
-        FocusManager.i.Remove(nameof(chatHistory));
+        if (FocusManager.i != null)
+        {
+            FocusManager.i.Remove(nameof(collectionPanel));
+            FocusManager.i.Remove(nameof(sessionPanel));
+            FocusManager.i.Remove(nameof(chatHistory));
+        }
     }
 }

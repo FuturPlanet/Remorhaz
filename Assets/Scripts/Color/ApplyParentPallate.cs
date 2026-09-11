@@ -8,7 +8,6 @@ public class ApplyParentPallate : MonoBehaviour
     public int colorId = 1;
     public bool directGlobal = false;
     public List<Component> components = new List<Component>();
-
     private void OnEnable()
     {
         ColorManager.i.onGlobalPallteChange.AddListener(UpdateColors);

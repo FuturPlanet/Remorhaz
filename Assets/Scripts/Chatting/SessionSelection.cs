@@ -16,7 +16,11 @@ public class SessionSelection : Singleton<SessionSelection>
     }
     private void OnDisable()
     {
-        ChatManager.i.onLoad.RemoveListener(LoadUnits);
+        if (ChatManager.i != null)
+        {
+            ChatManager.i.onLoad.RemoveListener(LoadUnits);
+        }
+        CancelInvoke(nameof(LoadUnits));
     }
     public void LoadUnits()
     {

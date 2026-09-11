@@ -22,12 +22,11 @@ public class ChatManager : Singleton<ChatManager>
     public UnityEvent onMessageDeleted;
     public UnityEvent refresh;
 
-    private void Awake()
+    protected override void OnSingletonAwake()
     {
         sessionName.onValueChanged.AddListener(OnSessionNameChanged);
         collectionName.onValueChanged.AddListener(OnCollectionNameChanged);
     }
-
     public void OnEnable()
     {
         Load();
@@ -61,7 +60,6 @@ public class ChatManager : Singleton<ChatManager>
         activeSession.chainId = chainId;
         Save();
     }
-
     public void SetActiveCollection(string collectionId)
     {
         activeCollection = sessionCollections.Find(s => s.id == collectionId);
@@ -90,7 +88,7 @@ public class ChatManager : Singleton<ChatManager>
         {
             role = "user",
             content = inputMessage,
-            isLinkOutput = false,
+            isLink = false,
             timestamp = System.DateTime.Now.ToString("o")
         };
         if (!string.IsNullOrEmpty(inputMessage))
@@ -184,10 +182,10 @@ public class ChatManager : Singleton<ChatManager>
         }
         ChatMessage target = messages[index];
         List<ChatMessage> toRemove = new List<ChatMessage> { target };
-        if (!target.isLinkOutput)
+        if (!target.isLink)
         {
             int i = index - 1;
-            while (i >= 0 && messages[i].isLinkOutput)
+            while (i >= 0 && messages[i].isLink)
             {
                 toRemove.Add(messages[i]);
                 i--;

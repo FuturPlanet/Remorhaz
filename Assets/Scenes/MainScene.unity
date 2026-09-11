@@ -1425,7 +1425,7 @@ MonoBehaviour:
   m_Content: {fileID: 666173632}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
@@ -4132,6 +4132,7 @@ GameObject:
   - component: {fileID: 737599916}
   - component: {fileID: 737599918}
   - component: {fileID: 737599917}
+  - component: {fileID: 737599919}
   m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
@@ -4196,6 +4197,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 737599915}
   m_CullTransparentMesh: 1
+--- !u!114 &737599919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737599915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 5
+  directGlobal: 1
+  components:
+  - {fileID: 737599917}
 --- !u!224 &740663862 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8510613540505917524, guid: f13272fb64587ee4294a009c052b3cb7, type: 3}
@@ -4781,6 +4798,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChatView
   messagePrefab: {fileID: 5873030635124219743, guid: 282ac82c3a47d564496466eff457df3f, type: 3}
   linkHiderPrefab: {fileID: 8543985074906903097, guid: d0a2014a084a1a3419408f2cc6482828, type: 3}
+  reasonHiderPrefab: {fileID: 8543985074906903097, guid: 8117ca706b427ce4593c6d1eee3397b0, type: 3}
   input: {fileID: 115171821}
   group: {fileID: 1201762611}
   chatHistory: {fileID: 2122595519}
@@ -5155,6 +5173,7 @@ GameObject:
   - component: {fileID: 979184605}
   - component: {fileID: 979184604}
   - component: {fileID: 979184603}
+  - component: {fileID: 979184606}
   m_Layer: 5
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
@@ -5269,6 +5288,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 979184601}
   m_CullTransparentMesh: 1
+--- !u!114 &979184606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979184601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 3
+  directGlobal: 1
+  components:
+  - {fileID: 979184604}
 --- !u!1 &981934304
 GameObject:
   m_ObjectHideFlags: 0
@@ -5949,7 +5984,7 @@ MonoBehaviour:
   m_Content: {fileID: 1863334736}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
@@ -7259,6 +7294,7 @@ GameObject:
   - component: {fileID: 1099612577}
   - component: {fileID: 1099612576}
   - component: {fileID: 1099612575}
+  - component: {fileID: 1099612578}
   m_Layer: 5
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
@@ -7373,6 +7409,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1099612573}
   m_CullTransparentMesh: 1
+--- !u!114 &1099612578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099612573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 3
+  directGlobal: 1
+  components:
+  - {fileID: 1099612576}
 --- !u!1 &1102556226
 GameObject:
   m_ObjectHideFlags: 0
@@ -8109,7 +8161,7 @@ MonoBehaviour:
   m_Content: {fileID: 1479419436}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
@@ -8233,7 +8285,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.00036621094}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1201762612
@@ -8448,11 +8500,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3931445780298621543, guid: 7334dc9b411410c45bfc22d1e118280a, type: 3}
       propertyPath: m_Color.b
-      value: 0.13333334
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3931445780298621543, guid: 7334dc9b411410c45bfc22d1e118280a, type: 3}
       propertyPath: m_Color.g
-      value: 0.34117648
+      value: 0.93333334
       objectReference: {fileID: 0}
     - target: {fileID: 5535953679661312150, guid: 7334dc9b411410c45bfc22d1e118280a, type: 3}
       propertyPath: m_Name
@@ -8555,6 +8607,7 @@ GameObject:
   - component: {fileID: 1291794039}
   - component: {fileID: 1291794038}
   - component: {fileID: 1291794037}
+  - component: {fileID: 1291794040}
   m_Layer: 5
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
@@ -8669,6 +8722,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1291794035}
   m_CullTransparentMesh: 1
+--- !u!114 &1291794040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291794035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 3
+  directGlobal: 1
+  components:
+  - {fileID: 1291794038}
 --- !u!1 &1307661553
 GameObject:
   m_ObjectHideFlags: 0
@@ -8845,7 +8914,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1350814653
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9556,6 +9625,7 @@ MonoBehaviour:
   visual: {fileID: 1350814652}
   visualGroup: {fileID: 1863334736}
   chainName: {fileID: 423201710}
+  deleteChainButton: {fileID: 1912142221}
 --- !u!1 &1575804160
 GameObject:
   m_ObjectHideFlags: 0
@@ -10175,6 +10245,7 @@ GameObject:
   - component: {fileID: 1715316881}
   - component: {fileID: 1715316880}
   - component: {fileID: 1715316879}
+  - component: {fileID: 1715316882}
   m_Layer: 5
   m_Name: Scrollbar Vertical
   m_TagString: Untagged
@@ -10289,6 +10360,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1715316877}
   m_CullTransparentMesh: 1
+--- !u!114 &1715316882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1715316877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 3
+  directGlobal: 1
+  components:
+  - {fileID: 1715316880}
 --- !u!114 &1720186217 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4930261551533316256, guid: b722d3aa5c0367f41b4821f00781ab80, type: 3}
@@ -10437,6 +10524,7 @@ GameObject:
   - component: {fileID: 1766515192}
   - component: {fileID: 1766515194}
   - component: {fileID: 1766515193}
+  - component: {fileID: 1766515195}
   m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
@@ -10501,6 +10589,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1766515191}
   m_CullTransparentMesh: 1
+--- !u!114 &1766515195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1766515191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 5
+  directGlobal: 1
+  components:
+  - {fileID: 1766515193}
 --- !u!1001 &1808684765
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11002,6 +11106,7 @@ GameObject:
   - component: {fileID: 1907836771}
   - component: {fileID: 1907836773}
   - component: {fileID: 1907836772}
+  - component: {fileID: 1907836774}
   m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
@@ -11066,6 +11171,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1907836770}
   m_CullTransparentMesh: 1
+--- !u!114 &1907836774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1907836770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 5
+  directGlobal: 1
+  components:
+  - {fileID: 1907836772}
+--- !u!114 &1912142221 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 47079114467067000, guid: f13272fb64587ee4294a009c052b3cb7, type: 3}
+  m_PrefabInstance: {fileID: 7453216881863994543}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1 &1936072799
 GameObject:
   m_ObjectHideFlags: 0
@@ -11384,6 +11516,7 @@ GameObject:
   - component: {fileID: 2043222139}
   - component: {fileID: 2043222141}
   - component: {fileID: 2043222140}
+  - component: {fileID: 2043222142}
   m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
@@ -11448,6 +11581,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2043222138}
   m_CullTransparentMesh: 1
+--- !u!114 &2043222142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043222138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cb093a28af81f34b8deb642d59a6bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
+  colorId: 5
+  directGlobal: 1
+  components:
+  - {fileID: 2043222140}
 --- !u!1 &2044118176 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6207597114146701987, guid: 31f512c9c293f954887f35d37c7df5fa, type: 3}
@@ -12329,7 +12478,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3643586221350431588, guid: cc235f661c78340469ec87fea8bf88fa, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50.01
+      value: 50.009995
       objectReference: {fileID: 0}
     - target: {fileID: 3643586221350431588, guid: cc235f661c78340469ec87fea8bf88fa, type: 3}
       propertyPath: m_LocalPosition.x
@@ -13121,7 +13270,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 47079114467067000, guid: f13272fb64587ee4294a009c052b3cb7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 47079114467067000, guid: f13272fb64587ee4294a009c052b3cb7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -13146,6 +13295,18 @@ PrefabInstance:
     - target: {fileID: 47079114467067000, guid: f13272fb64587ee4294a009c052b3cb7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997812611569399816, guid: f13272fb64587ee4294a009c052b3cb7, type: 3}
+      propertyPath: onColorUpdate.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997812611569399816, guid: f13272fb64587ee4294a009c052b3cb7, type: 3}
+      propertyPath: onColorUpdate.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1997812611569399816, guid: f13272fb64587ee4294a009c052b3cb7, type: 3}
+      propertyPath: onColorUpdate.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4634561468011469823, guid: f13272fb64587ee4294a009c052b3cb7, type: 3}
       propertyPath: m_Color.b

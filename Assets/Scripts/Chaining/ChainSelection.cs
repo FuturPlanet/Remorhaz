@@ -18,6 +18,8 @@ public class ChainSelection : Singleton<ChainSelection>
     private Transform visualGroup;
     [SerializeField]
     private TMP_InputField chainName;
+    [SerializeField]
+    private Button deleteChainButton;
     private Chain currentChain;
 
     private void OnEnable()
@@ -26,11 +28,16 @@ public class ChainSelection : Singleton<ChainSelection>
         ChainEditor.i.OnEnable();
         CloseChain();
         InvokeRepeating(nameof(SaveCurrentChain), 2f, 2f);
+        deleteChainButton.onClick.AddListener(DeleteCurrentChain);
     }
     private void OnDisable()
     {
-        ChainEditor.Instance.onLoad.RemoveListener(LoadUnits);
+        if (ChainEditor.i != null)
+        {
+            ChainEditor.Instance.onLoad.RemoveListener(LoadUnits);
+        }
         SaveCurrentChain();
+        deleteChainButton.onClick.RemoveListener(DeleteCurrentChain);
     }
     private void SaveCurrentChain()
     {

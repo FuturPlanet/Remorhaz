@@ -64,8 +64,7 @@ public class ChainExecutor : Singleton<ChainExecutor>
                     role = "assistant",
                     content = response.content,
                     reasoning = response.reasoning,
-                    reasoningDetailsJson = response.reasoningDetailsJson,
-                    isLinkOutput = (i != chain.links.Count - 1),
+                    isLink = (i != chain.links.Count - 1),
                     timestamp = DateTime.UtcNow.ToString("o")
                 };
                 chatHistory.Add(linkMessage);

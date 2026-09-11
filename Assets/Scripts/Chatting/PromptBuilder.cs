@@ -21,32 +21,23 @@ public class PromptBuilder
 
         var messages = new JArray();
         if (!string.IsNullOrWhiteSpace(link.prompt))
+        {
             messages.Add(new JObject { ["role"] = "system", ["content"] = link.prompt });
-
+        }
         foreach (var m in SelectMessages(chatHistory, link))
-            messages.Add(ToApiMessage(m, link.replayReasoning));
-
+        {
+            messages.Add(new JObject { ["role"] = m.role, ["content"] = m.content ?? "" });
+        }
         body["messages"] = messages;
 
         if (link.maxTokens > 0) body["max_tokens"] = link.maxTokens;
 
         return body.ToString(Formatting.None);
     }
-    private static JObject ToApiMessage(ChatMessage m, bool replayReasoning)
-    {
-        var o = new JObject { ["role"] = m.role, ["content"] = m.content ?? "" };
-
-        if (replayReasoning && m.role == "assistant" && !string.IsNullOrEmpty(m.reasoningDetailsJson))
-        {
-            try { o["reasoning_details"] = JArray.Parse(m.reasoningDetailsJson); }
-            catch { /* stale/garbage cache: just omit */ }
-        }
-        return o;
-    }
     private static List<ChatMessage> SelectMessages(List<ChatMessage> chatHistory, ChainLink link)
     {
-        var linkOutputs = chatHistory.Where(m => m.isLinkOutput).ToList();
-        var regularMessages = chatHistory.Where(m => !m.isLinkOutput).ToList();
+        var linkOutputs = chatHistory.Where(m => m.isLink).ToList();
+        var regularMessages = chatHistory.Where(m => !m.isLink).ToList();
 
         var selected = new List<ChatMessage>();
         selected.AddRange(linkOutputs.Skip(Mathf.Max(0, linkOutputs.Count - link.chainDepth)));

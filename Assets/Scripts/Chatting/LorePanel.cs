@@ -23,6 +23,8 @@ public class LorePanel : Singleton<LorePanel>
         chainSelection.ClearOptions();
         List<TMP_Dropdown.OptionData> options = new List<TMP_Dropdown.OptionData>();
         int selectedIndex = 0;
+        bool foundMatch = false;
+
         for (int i = 0; i < ChainEditor.i.chains.Count; i++)
         {
             Chain chain = ChainEditor.i.chains[i];
@@ -31,13 +33,20 @@ public class LorePanel : Singleton<LorePanel>
             if (chain.id == ChatManager.i.activeSession.chainId)
             {
                 selectedIndex = i;
+                foundMatch = true;
             }
         }
         chainSelection.AddOptions(options);
-        chainSelection.SetValueWithoutNotify(selectedIndex);
+        if (ChainEditor.i.chains.Count > 0)
+        {
+            chainSelection.SetValueWithoutNotify(selectedIndex);
+            if (!foundMatch)
+            {
+                ChatManager.i.SetActiveChain(ChainEditor.i.chains[selectedIndex].id);
+            }
+        }
         chainSelection.RefreshShownValue();
     }
-
     private void OnChainSelectionChanged(int index)
     {
         ChatManager.i.SetActiveChain(GetSelectedChainId());

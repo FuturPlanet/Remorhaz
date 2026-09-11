@@ -8,6 +8,4 @@ public class ChainLink
     public int messageDepth;
     public int chainDepth;
     public string prompt;
-
-    public bool replayReasoning = false;
 }

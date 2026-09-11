@@ -655,8 +655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ApplyParentPallate
   colorId: 1
   directGlobal: 0
-  components:
-  - {fileID: 650308613237242716}
+  components: []
 --- !u!1 &2346184266656303997
 GameObject:
   m_ObjectHideFlags: 0
@@ -4745,7 +4744,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3100459817544742766}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.81333333
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4762,6 +4761,7 @@ GameObject:
   - component: {fileID: 8886312980979088892}
   - component: {fileID: 6044932175146506442}
   - component: {fileID: 2600235883625016606}
+  - component: {fileID: 4672358635557110795}
   m_Layer: 5
   m_Name: ChainWindow
   m_TagString: Untagged
@@ -4847,3 +4847,20 @@ MonoBehaviour:
   onColorUpdate:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4672358635557110795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9045121572660782185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cf5d1d2f3aafb443bfe021d0915802d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MatchTargetSize
+  target: {fileID: 1130619475507466289}
+  horizontal: 0
+  minimumTargetX: 100
+  vertical: 1
+  minimumTargetY: 0

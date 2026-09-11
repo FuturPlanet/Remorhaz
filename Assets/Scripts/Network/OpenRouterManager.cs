@@ -80,10 +80,6 @@ public class OpenRouterManager : Singleton<OpenRouterManager>
         result.reasoning = message["reasoning"]?.Type == JTokenType.String
                                 ? message["reasoning"].ToString() : null;
 
-        var details = message["reasoning_details"] as JArray;
-        if (details != null && details.Count > 0)
-            result.reasoningDetailsJson = details.ToString(Formatting.None);
-
         var usage = root["usage"];
         if (usage != null)
         {

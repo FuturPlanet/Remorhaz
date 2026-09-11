@@ -9,6 +9,8 @@ public class ChatView : Singleton<ChatView>
     private GameObject messagePrefab;
     [SerializeField]
     private GameObject linkHiderPrefab;
+    [SerializeField]
+    private GameObject reasonHiderPrefab;
     public TMP_InputField input;
     [SerializeField]
     private Transform group;
@@ -24,9 +26,15 @@ public class ChatView : Singleton<ChatView>
     }
     private void OnDisable()
     {
-        ChatManager.i.onMessageAdded.RemoveListener(Populate);
-        ChatManager.i.onMessageDeleted.RemoveListener(Refresh);
-        DragManager.i.onReorder.RemoveListener(UpdateIndexes);
+        if (ChatManager.i != null)
+        {
+            ChatManager.i.onMessageAdded.RemoveListener(Populate);
+            ChatManager.i.onMessageDeleted.RemoveListener(Refresh);
+        }
+        if (DragManager.i != null)
+        {
+            DragManager.i.onReorder.RemoveListener(UpdateIndexes);
+        }
     }
     public void Refresh()
     {
@@ -39,29 +47,29 @@ public class ChatView : Singleton<ChatView>
         {
             string timestamp = message.timestamp;
             if (messages.ContainsKey(timestamp)) { continue; }
+            if (!string.IsNullOrEmpty(message.reasoning))
+            {
+                var reasonObj = Instantiate(reasonHiderPrefab, group);
+                reasonObj.name = timestamp + "_reasoning";
+                reasonObj.transform.Find("Bubble/InputField (TMP)")
+                         .GetComponent<TMP_InputField>().text = message.reasoning;
+            }
             var messageObj = Instantiate(messagePrefab, group);
             messageObj.name = timestamp;
-            TMP_InputField input = messageObj.transform.Find("Bubble/InputField (TMP)").GetComponent<TMP_InputField>();
-            input.text = message.content;
-            input.onEndEdit.AddListener(_ => EditMessageText(timestamp));
+            TMP_InputField messageInput = messageObj.transform.Find("Bubble/InputField (TMP)").GetComponent<TMP_InputField>();
+            messageInput.text = message.content;
+            messageInput.onEndEdit.AddListener(_ => EditMessageText(timestamp));
             Button deleteButton = messageObj.transform.Find("Delete").GetComponent<Button>();
-            //if (message.role != "user")
-            //{
-            //    var messageRect = input.GetComponent<RectTransform>();
-            //    messageRect.anchoredPosition += new Vector2(-250, 0);
-
-            //    var deleteRect = deleteButton.GetComponent<RectTransform>();
-            //    deleteRect.anchoredPosition += new Vector2(-250, 0);
-            //}
-            if (message.isLinkOutput)
+            deleteButton.onClick.AddListener(() => ChatManager.i.DeleteMessage(timestamp));
+            if (message.isLink)
             {
                 messageObj.SetActive(false);
                 var linkObj = Instantiate(linkHiderPrefab, group);
-                linkObj.name = messageObj.name;
-                linkObj.transform.Find("Bubble/InputField (TMP)").GetComponent<TMP_InputField>().text = message.content;
+                linkObj.name = timestamp + "_link";
+                linkObj.transform.Find("Bubble/InputField (TMP)")
+                       .GetComponent<TMP_InputField>().text = message.content;
             }
-            messages.Add(timestamp, input);
-            deleteButton.onClick.AddListener(() => ChatManager.i.DeleteMessage(timestamp));
+            messages.Add(timestamp, messageInput);
         }
         input.transform.parent.SetAsLastSibling();
     }

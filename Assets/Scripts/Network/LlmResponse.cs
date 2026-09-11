@@ -5,7 +5,6 @@ public class LlmResponse
 
     public string content;
     public string reasoning;
-    public string reasoningDetailsJson;
     public string finishReason;
 
     public int promptTokens;
