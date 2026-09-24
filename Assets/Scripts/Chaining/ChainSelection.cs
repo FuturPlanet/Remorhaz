@@ -27,7 +27,7 @@ public class ChainSelection : Singleton<ChainSelection>
         ChainEditor.Instance.onLoad.AddListener(LoadUnits);
         ChainEditor.i.OnEnable();
         CloseChain();
-        InvokeRepeating(nameof(SaveCurrentChain), 2f, 2f);
+        RuntimeManager.i.AddTask(0, true, 3000).AddListener(this, SaveCurrentChain);
         deleteChainButton.onClick.AddListener(DeleteCurrentChain);
     }
     private void OnDisable()

@@ -5,12 +5,8 @@ using TMPro;
 
 public class ChatManager : Singleton<ChatManager>
 {
-    [HideInInspector]
-    public List<ChatSession> sessions = new List<ChatSession>();
-    [HideInInspector]
-    public List<ChatSessionCollection> sessionCollections = new List<ChatSessionCollection>();
-    [HideInInspector]
-    public Dictionary<string,string> trees = new Dictionary<string, string>();
+    private List<ChatSession> sessions = new List<ChatSession>();
+    private List<ChatSessionCollection> sessionCollections = new List<ChatSessionCollection>();
     [SerializeField]
     private TMP_InputField sessionName;
     [SerializeField]
@@ -32,10 +28,15 @@ public class ChatManager : Singleton<ChatManager>
     public void OnEnable()
     {
         Load();
-        InvokeRepeating(nameof(Save), 2f, 2f);
+        DragPanelManager.i.onReorder.AddListener(Save);
+        RuntimeManager.i.AddTask(0, true, 3000).AddListener(this, Save);
     }
     private void OnDisable()
     {
+        if(DragPanelManager.i != null)
+        {
+            DragPanelManager.i.onReorder.RemoveListener(Save);
+        }
         Save();
     }
     private void OnCollectionNameChanged(string value)
@@ -202,24 +203,19 @@ public class ChatManager : Singleton<ChatManager>
     }
     public void Save()
     {
-        ES3.Save("chatSessions", sessions);
-        ES3.Save("chatSessionCollections", sessionCollections);
-        ES3.Save("trees", trees);
+        SaveManager.i.Save("chatSessions", sessions, "Chat");
+        SaveManager.i.Save("chatSessionCollections", sessionCollections, "Chat");
         onSave?.Invoke();
     }
     public void Load()
     {
-        if (ES3.KeyExists("chatSessions"))
+        if (SaveManager.i.KeyExists("chatSessions", "Chat"))
         {
-            sessions = ES3.Load<List<ChatSession>>("chatSessions");
+            sessions = SaveManager.i.Load<List<ChatSession>>("chatSessions", "Chat");
         }
-        if (ES3.KeyExists("chatSessionCollections"))
+        if (SaveManager.i.KeyExists("chatSessionCollections", "Chat"))
         {
-            sessionCollections = ES3.Load<List<ChatSessionCollection>>("chatSessionCollections");
-        }
-        if (ES3.KeyExists("trees"))
-        {
-            trees = ES3.Load<Dictionary<string, string>>("trees");
+            sessionCollections = SaveManager.i.Load<List<ChatSessionCollection>>("chatSessionCollections", "Chat");
         }
         onLoad?.Invoke();
     }
@@ -239,7 +235,7 @@ public class ChatManager : Singleton<ChatManager>
     {
         if (activeCollection == null)
         {
-            Debug.LogWarning("[ChatManager] No active collection.");
+            Logger.i.Log(this, "No active collection.", LogType.Warning);
             return;
         }
         for (int i = 0; i < orderedSessionIds.Count; i++)

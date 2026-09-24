@@ -61,7 +61,7 @@ public class ModuleSelection : Singleton<ModuleSelection>
         ModuleEditor.Instance.onLoad.AddListener(LoadUnits);
         ModuleEditor.i.OnEnable();
         CloseModule();
-        InvokeRepeating(nameof(SaveCurrentModule), 2f, 2f);
+        RuntimeManager.i.AddTask(0, true, 3000).AddListener(this, SaveCurrentModule);
     }
     private void OnDisable()
     {

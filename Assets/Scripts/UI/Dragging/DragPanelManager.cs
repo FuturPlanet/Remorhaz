@@ -46,11 +46,10 @@ public class DragPanelManager : Singleton<DragPanelManager>
             Load();
         }
         CancelInvoke(nameof(Save));
-        InvokeRepeating(nameof(Save), 2f, 2f);
+        RuntimeManager.i.AddTask(0, true, 3000).AddListener(this, Save);
     }
     private void OnDisable()
     {
-        CancelInvoke(nameof(Save));
         Save();
     }
     private void LateUpdate()
@@ -64,19 +63,19 @@ public class DragPanelManager : Singleton<DragPanelManager>
     }
     public void Save()
     {
-        ES3.Save("dragTrees", dragTrees);
-        ES3.Save("dragFolders", dragFolders);
+        SaveManager.i.Save("dragTrees", dragTrees, "Trees");
+        SaveManager.i.Save("dragFolders", dragFolders, "Trees");
         onSave?.Invoke();
     }
     public void Load()
     {
-        if (ES3.KeyExists("dragTrees"))
+        if (SaveManager.i.KeyExists("dragTrees", "Trees"))
         {
-            dragTrees = ES3.Load<List<DragFolderTree>>("dragTrees");
+            dragTrees = SaveManager.i.Load<List<DragFolderTree>>("dragTrees", "Trees");
         }
-        if (ES3.KeyExists("dragFolders"))
+        if (SaveManager.i.KeyExists("dragFolders", "Trees"))
         {
-            dragFolders = ES3.Load<List<DragFolder>>("dragFolders");
+            dragFolders = SaveManager.i.Load<List<DragFolder>>("dragFolders", "Trees");
         }
         if (dragTrees == null)
         {
@@ -121,14 +120,14 @@ public class DragPanelManager : Singleton<DragPanelManager>
         RequestRefresh(id);
         onLoad?.Invoke();
     }
-    public void MakeObjectDragable(GameObject obj, string folderData = "")
+    public DragAble MakeObjectDragable(GameObject obj, string folderData = "")
     {
-        if (obj == null) return;
+        if (obj == null) return null;
         Transform parent = obj.transform.parent;
         if (VerifyParent(parent, folderData))
         {
             string treeId = GetContainerTree(parent);
-            if (string.IsNullOrEmpty(treeId)) return;
+            if (string.IsNullOrEmpty(treeId)) return null;
             DragFolderTree tree = GetTree(treeId);
             string objId = GetObjId(folderData);
             if (string.IsNullOrEmpty(objId))
@@ -139,10 +138,12 @@ public class DragPanelManager : Singleton<DragPanelManager>
             {
                 InsertEntry(tree, objString, GetCurrentPath(treeId), objId, int.MaxValue);
             }
-            AddDragAble(obj, objId, treeId);
+            var script = AddDragAble(obj, objId, treeId);
             liveEntries[objId] = obj.transform;
             RequestRefresh(treeId);
+            return script;
         }
+        return null;
     }
     public string CreateFolder(Transform parent)
     {

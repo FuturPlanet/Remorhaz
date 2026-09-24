@@ -10,8 +10,6 @@ public struct Focus
 public class FocusManager : Singleton<FocusManager>
 {
     private Dictionary<string, Focus> focuses = new Dictionary<string, Focus>();
-    [SerializeField]
-    private bool supressConsole;
     public string Add(GameObject off, GameObject on, string key = "")
     {
         return Add(new[] { off }, new[] { on }, key);
@@ -54,7 +52,7 @@ public class FocusManager : Singleton<FocusManager>
     {
         if (!focuses.TryGetValue(key, out Focus focus))
         {
-            Debug.LogError($"Focus key '{key}' not found!");
+            Logger.i.Log(this, $"Focus key '{key}' not found!", LogType.Error);
             return;
         }
         foreach (var off in focus.toTurnOff)
@@ -65,6 +63,6 @@ public class FocusManager : Singleton<FocusManager>
         {
             on.SetActive(!reverse);
         }
-        if (!supressConsole) { Debug.Log($"Focusing on: {key}! Off: [{string.Join(", ", focus.toTurnOff.Select(g => g.name))}] | On: [{string.Join(", ", focus.toTurnOn.Select(g => g.name))}]"); }
+        Logger.i.Log(this, $"Focusing on: {key}! Off: [{string.Join(", ", focus.toTurnOff.Select(g => g.name))}] | On: [{string.Join(", ", focus.toTurnOn.Select(g => g.name))}]");
     }
 }

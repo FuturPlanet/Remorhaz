@@ -13,7 +13,7 @@ public class OptionsManager : Singleton<OptionsManager>
     private void OnEnable()
     {
         Load();
-        InvokeRepeating(nameof(Save), 1, 1);
+        RuntimeManager.i.AddTask(0, true, 3000).AddListener(this, Save);
     }
     private void OnDisable()
     {
@@ -21,24 +21,24 @@ public class OptionsManager : Singleton<OptionsManager>
     }
     public void Save()
     {
-        ES3.Save("graphicSettings", graphicSettings);
-        ES3.Save("audioSettings", audioSettings);
-        ES3.Save("openRouterSettings", openRouterSettings);
+        SaveManager.i.Save("graphicSettings", graphicSettings, "Settings");
+        SaveManager.i.Save("audioSettings", audioSettings, "Settings");
+        SaveManager.i.Save("openRouterSettings", openRouterSettings, "Settings");
         onSave?.Invoke();
     }
     public void Load()
     {
-        if (ES3.KeyExists("graphicSettings"))
+        if (SaveManager.i.KeyExists("graphicSettings", "Settings"))
         {
-            graphicSettings = ES3.Load<GraphicSettings>("graphicSettings");
+            graphicSettings = SaveManager.i.Load<GraphicSettings>("graphicSettings", "Settings");
         }
         else
         {
             graphicSettings = new GraphicSettings();
         }
-        if (ES3.KeyExists("audioSettings"))
+        if (SaveManager.i.KeyExists("audioSettings", "Settings"))
         {
-            audioSettings = ES3.Load<AudioSettings>("audioSettings");
+            audioSettings = SaveManager.i.Load<AudioSettings>("audioSettings", "Settings");
         }
         else
         {
@@ -49,9 +49,9 @@ public class OptionsManager : Singleton<OptionsManager>
                 sfxVolume = 0.5f
             };
         }
-        if (ES3.KeyExists("openRouterSettings"))
+        if (SaveManager.i.KeyExists("openRouterSettings", "Settings"))
         {
-            openRouterSettings = ES3.Load<OpenRouterSettings>("openRouterSettings");
+            openRouterSettings = SaveManager.i.Load<OpenRouterSettings>("openRouterSettings", "Settings");
         }
         else
         {
@@ -61,9 +61,9 @@ public class OptionsManager : Singleton<OptionsManager>
     }
     public void DeleteAllCollections()
     {
-        if (ES3.KeyExists("chatSessionCollections"))
+        if (SaveManager.i.KeyExists("chatSessionCollections", "Settings"))
         {
-            ES3.DeleteDirectory("chatSessionCollections");
+            SaveManager.i.DeleteFile("chatSessionCollections", "Settings");
         }
     }
 }

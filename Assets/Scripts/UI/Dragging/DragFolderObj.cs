@@ -106,11 +106,18 @@ public class DragFolderObj : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (chrome.backButton == null && backButtonPrefab != null)
         {
             chrome.backButton = Instantiate(backButtonPrefab, container);
-            if (chrome.backButton.TryGetComponent(out Button backButton))
+            Button backButton;
+            if (chrome.backButton.TryGetComponent(out Button _backButton))
             {
-                backButton.onClick.RemoveAllListeners();
-                backButton.onClick.AddListener(() => DragPanelManager.i.ExitFolder(container));
+                backButton = _backButton;
             }
+            else
+            {
+                backButton = chrome.backButton.GetComponentInChildren<Button>(true);
+            }
+            backButton.name = "BackButton";
+            backButton.onClick.RemoveAllListeners();
+            backButton.onClick.AddListener(() => DragPanelManager.i.ExitFolder(container));
         }
         if (!navigationHooked)
         {

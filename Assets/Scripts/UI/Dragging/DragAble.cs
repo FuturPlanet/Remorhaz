@@ -1,19 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
-public class DragAble : MonoBehaviour, IPointerDownHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+public class DragAble : MonoBehaviour, IPointerDownHandler, IDragHandler, IEndDragHandler
 {
     public string folderData;
 
     [SerializeField]
     private float dragThreshold = 10f;
 
+    public UnityEvent onDragEnd = new();
+
     private CanvasGroup canvasGroup;
     private Vector2 pointerStartPos;
     private GameObject dragCopy;
     private bool isDragging;
-
     private void OnEnable()
     {
         if (!TryGetComponent(out canvasGroup))
@@ -25,12 +27,10 @@ public class DragAble : MonoBehaviour, IPointerDownHandler, IDragHandler, IEndDr
     public void OnDrag(PointerEventData eventData)
     {
         if (!isDragging && Vector2.Distance(eventData.position, pointerStartPos) <= dragThreshold) return;
-
         if (!isDragging)
         {
             StartDrag();
         }
-
         UpdateDragPosition(eventData);
     }
     public void OnEndDrag(PointerEventData eventData)
@@ -86,6 +86,8 @@ public class DragAble : MonoBehaviour, IPointerDownHandler, IDragHandler, IEndDr
         DragPanelManager.i.isDragging = false;
         DragPanelManager.i.originalObject = null;
         DragPanelManager.i.CurrentDropTarget = null;
+
+        onDragEnd?.Invoke();
     }
     private void ResolveDrop(PointerEventData eventData)
     {
@@ -126,20 +128,5 @@ public class DragAble : MonoBehaviour, IPointerDownHandler, IDragHandler, IEndDr
             }
         }
         return null;
-    }
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (!isDragging)
-        {
-            OnClick();
-        }
-    }
-
-    private void OnClick()
-    {
-        if (TryGetComponent(out DragFolderObj folder))
-        {
-            folder.OpenFolder();
-        }
     }
 }

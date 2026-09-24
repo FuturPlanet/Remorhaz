@@ -39,16 +39,16 @@ public class ModuleEditor : Singleton<ModuleEditor>
     }
     public void SaveModules()
     {
-        ES3.Save("modules", modules);
+        SaveManager.i.Save("modules", modules, "Modules");
         onSave?.Invoke();
     }
     private void LoadModules()
     {
-        if (ES3.KeyExists("modules"))
+        if (SaveManager.i.KeyExists("modules", "Modules"))
         {
-            modules = ES3.Load<List<Module>>("modules");
+            modules = SaveManager.i.Load<List<Module>>("modules", "Modules");
+            onLoad?.Invoke();
         }
-        onLoad?.Invoke();
     }
     public Module GetModuleById(string id)
     {

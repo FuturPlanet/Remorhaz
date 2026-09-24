@@ -67,16 +67,16 @@ public class ChainEditor : Singleton<ChainEditor>
     }
     public void SaveChains()
     {
-        ES3.Save("chains", chains);
+        SaveManager.i.Save("chains", chains, "Chains");
         onSave?.Invoke();
     }
     private void LoadChains()
     {
-        if (ES3.KeyExists("chains"))
+        if (SaveManager.i.KeyExists("chains", "Chains"))
         {
-            chains = ES3.Load<List<Chain>>("chains");
+            chains = SaveManager.i.Load<List<Chain>>("chains", "Chains");
+            onLoad?.Invoke();
         }
-        onLoad?.Invoke();
     }
     public Chain GetChainById(string id)
     {

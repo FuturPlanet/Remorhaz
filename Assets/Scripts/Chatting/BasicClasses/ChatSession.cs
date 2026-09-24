@@ -7,5 +7,6 @@ public class ChatSession
     public string chainId;
     public string name;
     public int index;
+    public string folderData;
     public List<ChatMessage> messages;
 }

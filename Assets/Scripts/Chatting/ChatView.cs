@@ -17,12 +17,11 @@ public class ChatView : Singleton<ChatView>
     [SerializeField]
     private GameObject chatHistory;
     private Dictionary<string, TMP_InputField> messages = new Dictionary<string, TMP_InputField>();
-    
     private void OnEnable()
     {
         ChatManager.i.onMessageAdded.AddListener(Populate);
         ChatManager.i.onMessageDeleted.AddListener(Refresh);
-        DragPanelManager.i.onReorder.AddListener(UpdateIndexes);
+        //DragPanelManager.i.onReorder.AddListener(UpdateIndexes);
     }
     private void OnDisable()
     {
@@ -33,7 +32,7 @@ public class ChatView : Singleton<ChatView>
         }
         if (DragPanelManager.i != null)
         {
-            DragPanelManager.i.onReorder.RemoveListener(UpdateIndexes);
+            //DragPanelManager.i.onReorder.RemoveListener(UpdateIndexes);
         }
     }
     public void Refresh()
@@ -73,11 +72,11 @@ public class ChatView : Singleton<ChatView>
         }
         input.transform.parent.SetAsLastSibling();
     }
-    private void UpdateIndexes()
-    {
-        SessionCollectionSelection.i.UpdateIndexes();
-        SessionSelection.i.UpdateIndexes();
-    }
+    //private void UpdateIndexes()
+    //{
+    //    SessionCollectionSelection.i.UpdateIndexes();
+    //    SessionSelection.i.UpdateIndexes();
+    //}
     public void EditMessageText(string timestamp)
     {
         ChatMessage message = ChatManager.i.activeSession.messages.Find(c => c.timestamp == timestamp);
@@ -98,12 +97,12 @@ public class ChatView : Singleton<ChatView>
     public void OpenCollectionPanel()
     {
         FocusManager.i.FocusOn(nameof(ChatFocuser.i.collectionPanel));
-        SessionCollectionSelection.i.LoadUnits();
+        //SessionCollectionSelection.i.LoadUnits();
     }
     public void OpenSessionPanel()
     {
         FocusManager.i.FocusOn(nameof(ChatFocuser.i.sessionPanel));
-        SessionSelection.i.LoadUnits();
+        //SessionSelection.i.LoadUnits();
     }
     public void OpenChatHistory()
     {
